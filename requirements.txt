@@ -1,0 +1,5 @@
+streamlit==1.48.0
+python-dateutil==2.9.0.post0
+pytz==2025.2
+pydeck==0.9.1
+requests==2.32.4
