@@ -37,9 +37,62 @@
         "Agentic Payments & Economy"
       ],
       "duration": 3.24629845
+    },
+    {
+      "session_id": "session_20250806_135945",
+      "start_time": "2025-08-06T13:59:45.556768",
+      "end_time": null,
+      "flashcards_studied": 6,
+      "tests_taken": 0,
+      "test_scores": [],
+      "topics_covered": "set()",
+      "duration": 0
     }
   ],
-  "flashcard_stats": {},
+  "flashcard_stats": {
+    "Agentic Economy": {
+      "times_studied": 1,
+      "times_correct": 0,
+      "last_studied": "2025-08-06T14:00:02.992875",
+      "difficulty_level": 1,
+      "next_review": "2025-08-08T14:00:02.992886"
+    },
+    "Stdio Transport": {
+      "times_studied": 1,
+      "times_correct": 0,
+      "last_studied": "2025-08-06T14:00:12.647479",
+      "difficulty_level": 1,
+      "next_review": "2025-08-08T14:00:12.647493"
+    },
+    "Error Handling": {
+      "times_studied": 1,
+      "times_correct": 1,
+      "last_studied": "2025-08-06T14:00:19.481264",
+      "difficulty_level": 2,
+      "next_review": "2025-08-10T14:00:19.481278"
+    },
+    "Prompt Engineering": {
+      "times_studied": 1,
+      "times_correct": 1,
+      "last_studied": "2025-08-06T14:00:26.321440",
+      "difficulty_level": 2,
+      "next_review": "2025-08-10T14:00:26.321458"
+    },
+    "Multi-Agent Systems": {
+      "times_studied": 1,
+      "times_correct": 0,
+      "last_studied": "2025-08-06T14:08:34.931231",
+      "difficulty_level": 1,
+      "next_review": "2025-08-08T14:08:34.931248"
+    },
+    "WebSocket": {
+      "times_studied": 1,
+      "times_correct": 1,
+      "last_studied": "2025-08-06T14:08:41.563190",
+      "difficulty_level": 2,
+      "next_review": "2025-08-10T14:08:41.563203"
+    }
+  },
   "test_results": [
     {
       "session_id": "session_20250806_115336",

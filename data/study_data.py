@@ -5,6 +5,15 @@ Study data module containing flashcards, topics, and summary information
 def get_topics():
     """Return the topics and their estimated number of questions for mock tests"""
     return {
+        # OpenAI Agents SDK Topics (Enhanced)
+        "Agent Fundamentals": 25,
+        "Tools and Function Calling": 30,
+        "Handoffs and Multi-Agent Systems": 25,
+        "Sessions and Memory Management": 20,
+        "Guardrails and Security": 20,
+        "Production Deployment": 15,
+        "Advanced Patterns": 15,
+        
         # Building Effective Agents Topics
         "Workflows vs Agents": 15,
         "LLM Augmentation": 20,
@@ -26,6 +35,28 @@ def get_topics():
 def get_flashcards():
     """Return flashcard term-definition pairs"""
     return {
+        # OpenAI Agents SDK Enhanced Flashcards
+        "OpenAI Agents SDK": "A lightweight, production-ready Python framework for building multi-agent workflows with agents, handoffs, guardrails, and sessions.",
+        "Agent (OpenAI SDK)": "An LLM equipped with instructions, tools, and the ability to take autonomous actions in a loop until tasks are completed.",
+        "Handoffs": "Mechanism allowing agents to transfer complete control to other specialized agents, passing full conversation history and context.",
+        "Guardrails": "Input and output validation systems that ensure agent safety, prevent harmful requests, and maintain policy compliance.",
+        "Sessions": "Automatic conversation history management system that maintains context across multiple agent interactions without manual state handling.",
+        "Function Tools": "Python functions converted to agent tools with automatic schema generation and Pydantic validation.",
+        "Hosted Tools": "OpenAI-managed tools like WebSearch, CodeInterpreter, and FileSearch that run on LLM servers alongside AI models.",
+        "Agents as Tools": "Pattern where agents can be used as tools by other agents, maintaining orchestrator control while leveraging specialist capabilities.",
+        "Tool Composition": "Advanced techniques for combining multiple tools: sequential chaining, parallel execution, and conditional selection.",
+        "Agent Orchestration": "Managing complex multi-agent workflows with coordination patterns, conflict resolution, and failure recovery.",
+        "Context Window Optimization": "Strategies for managing conversation history within model limits through compression, sliding windows, and selective retention.",
+        "Agent Tracing": "Built-in monitoring system that captures agent decisions, tool calls, performance metrics, and workflow visualization.",
+        "Production Deployment": "Enterprise patterns for agent systems: containerization, auto-scaling, circuit breakers, and blue-green deployments.",
+        "Multi-Model Support": "SDK compatibility with OpenAI models and 100+ other LLMs through Chat Completions-style APIs.",
+        "Structured Outputs": "Using Pydantic models to force agents to return data in specific formats for reliable system integration.",
+        "Async Agent Execution": "Non-blocking agent operations using Python's asyncio for high-concurrency applications.",
+        "Agent Security": "Comprehensive security including API key management, input validation, output filtering, and audit logging.",
+        "Tool Error Handling": "Robust error management with custom failure functions, automatic retries, and graceful degradation.",
+        "Agent Lifecycle Management": "Complete process of agent creation, initialization, execution monitoring, and graceful shutdown.",
+        "Dynamic Instructions": "Runtime modification of agent instructions based on context, user preferences, or environmental conditions.",
+        
         # Building Effective Agents Concepts
         "RAG (Retrieval-Augmented Generation)": "Combines retrieval from external sources with LLM generation to produce grounded responses.",
         "Planner-Worker Pattern": "A design pattern where a planner agent creates and delegates subtasks to worker agents.",

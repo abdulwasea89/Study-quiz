@@ -4,6 +4,11 @@ Test generation utilities for creating mock tests
 import random
 from typing import Dict, List, Any, Optional
 from data.study_data import get_topics, get_questions_by_topic, get_difficulty_levels
+from data.enhanced_study_data import (
+    get_progressive_openai_sdk_questions,
+    get_enhanced_building_agents_questions,
+    get_enhanced_mcp_questions
+)
 
 class TestGenerator:
     def __init__(self):
@@ -14,6 +19,13 @@ class TestGenerator:
             "Building Effective Agents": ["Agent Architecture", "Design Patterns", "Memory Systems", "Tool Integration", "Retrieval Systems", "Economic Integration"],
             "Model Context Protocol (MCP)": ["MCP Fundamentals", "Transport Layers", "HTTP Theory", "REST Architecture", "JSON-RPC", "Security", "MCP OpenAI Integration"],
             "OpenAI Agents SDK": ["OpenAI Agents SDK Fundamentals", "OpenAI Agents Implementation", "OpenAI Tools and Functions", "OpenAI Handoffs and Multi-Agent", "OpenAI Sessions and State", "OpenAI Guardrails and Security", "OpenAI Tracing and Monitoring"]
+        }
+        
+        # Enhanced progressive question pools
+        self.enhanced_questions = {
+            "OpenAI Agents SDK": get_progressive_openai_sdk_questions(),
+            "Building Effective Agents": get_enhanced_building_agents_questions(),
+            "Model Context Protocol (MCP)": get_enhanced_mcp_questions()
         }
     
     def generate_mock_test(self, total_questions: int = 120, custom_distribution: Optional[Dict[str, int]] = None) -> List[Dict[str, Any]]:

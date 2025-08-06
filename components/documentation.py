@@ -823,6 +823,605 @@ def _show_openai_agents_docs(difficulty, search_term):
         
         **Session Persistence:**
         ```python
+        import json
+        from agents import Session
+        
+        # Save session state
+        def save_session(session: Session, filename: str):
+            session_data = {
+                "messages": session.messages,
+                "metadata": session.metadata,
+                "created_at": session.created_at.isoformat()
+            }
+            with open(filename, 'w') as f:
+                json.dump(session_data, f)
+        
+        # Load session state
+        def load_session(filename: str) -> Session:
+            with open(filename, 'r') as f:
+                data = json.load(f)
+            
+            session = Session()
+            session.messages = data["messages"]
+            session.metadata = data["metadata"]
+            return session
+        ```
+        """)
+    
+    # Guardrails and Safety
+    with st.expander("🛡️ Guardrails and Security Implementation"):
+        st.markdown("""
+        ### Input Guardrails
+        
+        **Content Safety Guardrail:**
+        ```python
+        from agents import Agent, InputGuardrail, GuardrailFunctionOutput
+        
+        async def content_safety_check(ctx, agent, input_data: str) -> GuardrailFunctionOutput:
+            \"\"\"Check for inappropriate content\"\"\"
+            banned_words = ["spam", "hack", "exploit"]
+            
+            if any(word in input_data.lower() for word in banned_words):
+                return GuardrailFunctionOutput(
+                    tripwire_triggered=True,
+                    output_info="Content violates safety policies"
+                )
+            
+            return GuardrailFunctionOutput(tripwire_triggered=False)
+        
+        safe_agent = Agent(
+            name="SafeAgent",
+            instructions="Provide helpful responses within safety guidelines",
+            input_guardrails=[InputGuardrail(guardrail_function=content_safety_check)]
+        )
+        ```
+        
+        **Business Logic Guardrail:**
+        ```python
+        async def business_hours_check(ctx, agent, input_data: str) -> GuardrailFunctionOutput:
+            \"\"\"Only allow certain operations during business hours\"\"\"
+            from datetime import datetime
+            
+            now = datetime.now()
+            if now.hour < 9 or now.hour > 17:
+                return GuardrailFunctionOutput(
+                    tripwire_triggered=True,
+                    output_info="This operation is only available during business hours (9 AM - 5 PM)"
+                )
+            
+            return GuardrailFunctionOutput(tripwire_triggered=False)
+        ```
+        
+        ### Output Guardrails
+        
+        **Response Quality Check:**
+        ```python
+        from agents import OutputGuardrail
+        
+        async def quality_check(ctx, agent, output_data: str) -> GuardrailFunctionOutput:
+            \"\"\"Ensure response meets quality standards\"\"\"
+            
+            # Check minimum length
+            if len(output_data.strip()) < 10:
+                return GuardrailFunctionOutput(
+                    tripwire_triggered=True,
+                    output_info="Response too short, please provide more detail"
+                )
+            
+            # Check for placeholder text
+            placeholders = ["TODO", "PLACEHOLDER", "TBD"]
+            if any(placeholder in output_data for placeholder in placeholders):
+                return GuardrailFunctionOutput(
+                    tripwire_triggered=True,
+                    output_info="Response contains placeholder text"
+                )
+            
+            return GuardrailFunctionOutput(tripwire_triggered=False)
+        
+        quality_agent = Agent(
+            name="QualityAgent",
+            instructions="Provide high-quality, complete responses",
+            output_guardrails=[OutputGuardrail(guardrail_function=quality_check)]
+        )
+        ```
+        """)
+    
+    # Advanced Production Patterns
+    with st.expander("🏭 Production Patterns and Enterprise Deployment"):
+        st.markdown("""
+        ### Error Handling and Resilience
+        
+        **Comprehensive Error Handling:**
+        ```python
+        from agents import Agent, Runner
+        from agents.exceptions import AgentException, ToolException
+        import logging
+        
+        logger = logging.getLogger(__name__)
+        
+        class ProductionAgent:
+            def __init__(self):
+                self.agent = Agent(
+                    name="ProductionAgent",
+                    instructions="Handle tasks reliably",
+                    tools=[self.reliable_tool],
+                    max_retries=3,
+                    retry_delay=1.0
+                )
+            
+            def reliable_tool(self, data: str) -> str:
+                \"\"\"Tool with built-in error handling\"\"\"
+                try:
+                    # Simulate external API call
+                    result = external_api_call(data)
+                    return result
+                except APIException as e:
+                    logger.error(f"API error: {e}")
+                    return f"Service temporarily unavailable: {e}"
+                except Exception as e:
+                    logger.error(f"Unexpected error: {e}")
+                    return "An unexpected error occurred. Please try again."
+            
+            async def run_with_fallback(self, user_input: str):
+                try:
+                    result = await Runner.run(self.agent, user_input)
+                    return result.final_output
+                except AgentException as e:
+                    logger.error(f"Agent error: {e}")
+                    return "I encountered an issue. Please rephrase your request."
+                except Exception as e:
+                    logger.error(f"System error: {e}")
+                    return "System temporarily unavailable."
+        ```
+        
+        ### Monitoring and Observability
+        
+        **Custom Metrics and Logging:**
+        ```python
+        import time
+        from dataclasses import dataclass
+        from typing import Dict, Any
+        
+        @dataclass
+        class AgentMetrics:
+            agent_name: str
+            execution_time: float
+            tool_calls: int
+            tokens_used: int
+            success: bool
+            error_type: str = None
+        
+        class MonitoredAgent:
+            def __init__(self, agent: Agent):
+                self.agent = agent
+                self.metrics = []
+            
+            async def run_with_monitoring(self, input_data: str) -> Any:
+                start_time = time.time()
+                tool_calls = 0
+                success = False
+                error_type = None
+                
+                try:
+                    result = await Runner.run(self.agent, input_data)
+                    
+                    # Extract metrics from result
+                    tool_calls = len([item for item in result.new_items if hasattr(item, 'tool_name')])
+                    success = True
+                    
+                    return result
+                    
+                except Exception as e:
+                    error_type = type(e).__name__
+                    raise
+                    
+                finally:
+                    execution_time = time.time() - start_time
+                    
+                    metrics = AgentMetrics(
+                        agent_name=self.agent.name,
+                        execution_time=execution_time,
+                        tool_calls=tool_calls,
+                        tokens_used=0,  # Would need actual token counting
+                        success=success,
+                        error_type=error_type
+                    )
+                    
+                    self.metrics.append(metrics)
+                    self._log_metrics(metrics)
+            
+            def _log_metrics(self, metrics: AgentMetrics):
+                logger.info(f"Agent: {metrics.agent_name}, "
+                           f"Time: {metrics.execution_time:.2f}s, "
+                           f"Tools: {metrics.tool_calls}, "
+                           f"Success: {metrics.success}")
+        ```
+        
+        ### Load Balancing and Scaling
+        
+        **Agent Pool Management:**
+        ```python
+        import asyncio
+        from concurrent.futures import ThreadPoolExecutor
+        from typing import List
+        
+        class AgentPool:
+            def __init__(self, agent_template: Agent, pool_size: int = 5):
+                self.agent_template = agent_template
+                self.pool_size = pool_size
+                self.agents = [self._create_agent() for _ in range(pool_size)]
+                self.available_agents = asyncio.Queue()
+                
+                # Initialize queue with all agents
+                for agent in self.agents:
+                    self.available_agents.put_nowait(agent)
+            
+            def _create_agent(self) -> Agent:
+                return Agent(
+                    name=self.agent_template.name,
+                    instructions=self.agent_template.instructions,
+                    tools=self.agent_template.tools,
+                    model=self.agent_template.model
+                )
+            
+            async def execute_with_pool(self, tasks: List[str]) -> List[Any]:
+                \"\"\"Execute multiple tasks using agent pool\"\"\"
+                results = []
+                
+                async def process_task(task: str):
+                    # Get agent from pool
+                    agent = await self.available_agents.get()
+                    
+                    try:
+                        result = await Runner.run(agent, task)
+                        return result.final_output
+                    finally:
+                        # Return agent to pool
+                        await self.available_agents.put(agent)
+                
+                # Process all tasks concurrently
+                tasks_coroutines = [process_task(task) for task in tasks]
+                results = await asyncio.gather(*tasks_coroutines)
+                
+                return results
+        ```
+        
+        ### Configuration Management
+        
+        **Environment-Based Configuration:**
+        ```python
+        import os
+        from dataclasses import dataclass
+        from typing import Optional
+        
+        @dataclass
+        class AgentConfig:
+            model: str
+            temperature: float
+            max_tokens: int
+            timeout: int
+            max_retries: int
+            api_key: Optional[str] = None
+            
+            @classmethod
+            def from_environment(cls, env_prefix: str = "AGENT_"):
+                return cls(
+                    model=os.getenv(f"{env_prefix}MODEL", "gpt-4"),
+                    temperature=float(os.getenv(f"{env_prefix}TEMPERATURE", "0.1")),
+                    max_tokens=int(os.getenv(f"{env_prefix}MAX_TOKENS", "4000")),
+                    timeout=int(os.getenv(f"{env_prefix}TIMEOUT", "30")),
+                    max_retries=int(os.getenv(f"{env_prefix}MAX_RETRIES", "3")),
+                    api_key=os.getenv("OPENAI_API_KEY")
+                )
+        
+        class ConfigurableAgent:
+            def __init__(self, config: AgentConfig):
+                self.config = config
+                self.agent = Agent(
+                    name="ConfigurableAgent",
+                    instructions="I adapt to configuration settings",
+                    model=config.model,
+                    temperature=config.temperature,
+                    max_tokens=config.max_tokens
+                )
+        ```
+        """)
+    
+    # Hosted Tools Deep Dive
+    with st.expander("🌐 Hosted Tools and External Integrations"):
+        st.markdown("""
+        ### OpenAI Hosted Tools
+        
+        **Web Search Tool:**
+        ```python
+        from agents.tools import WebSearchTool
+        from agents import Agent, Runner
+        
+        # Basic web search agent
+        search_agent = Agent(
+            name="SearchAgent",
+            instructions="Search the web and provide accurate, up-to-date information",
+            tools=[WebSearchTool()]
+        )
+        
+        # Advanced search with result processing
+        class AdvancedSearchAgent:
+            def __init__(self):
+                self.search_tool = WebSearchTool(
+                    max_results=10,
+                    include_raw_results=True
+                )
+                
+                self.agent = Agent(
+                    name="AdvancedSearcher",
+                    instructions=\"\"\"Search the web and provide comprehensive analysis.
+                    Always cite your sources and provide multiple perspectives.\"\"\",
+                    tools=[self.search_tool, self.analyze_results]
+                )
+            
+            def analyze_results(self, search_results: str) -> str:
+                \"\"\"Analyze and synthesize search results\"\"\"
+                # Custom processing of search results
+                lines = search_results.split('\\n')
+                sources = [line for line in lines if line.startswith('Source:')]
+                
+                return f"Analysis based on {len(sources)} sources:\\n{search_results}"
+        ```
+        
+        **Code Interpreter Tool:**
+        ```python
+        from agents.tools import CodeInterpreterTool
+        
+        # Data analysis agent with code execution
+        data_agent = Agent(
+            name="DataAnalyst",
+            instructions=\"\"\"You are a data analysis expert.
+            Use the code interpreter to analyze data, create visualizations,
+            and perform statistical calculations.\"\"\",
+            tools=[CodeInterpreterTool()]
+        )
+        
+        # Example usage for data analysis
+        async def analyze_csv_data():
+            result = await Runner.run(
+                data_agent,
+                \"\"\"
+                Analyze the sales data in the uploaded CSV file:
+                1. Calculate total sales by region
+                2. Create a bar chart of monthly trends
+                3. Identify the top 5 performing products
+                4. Provide statistical summary
+                \"\"\"
+            )
+            return result.final_output
+        ```
+        
+        **File Search Tool:**
+        ```python
+        from agents.tools import FileSearchTool
+        
+        # Knowledge base agent with file search
+        kb_agent = Agent(
+            name="KnowledgeBase",
+            instructions=\"\"\"Search through company documents and provide
+            accurate information from our knowledge base.\"\"\",
+            tools=[FileSearchTool(
+                vector_store_ids=["vs_knowledge_base_123"],
+                max_num_results=5,
+                include_metadata=True
+            )]
+        )
+        ```
+        
+        ### Custom External Tool Integration
+        
+        **Database Integration Tool:**
+        ```python
+        import psycopg2
+        from typing import List, Dict, Any
+        
+        class DatabaseTool:
+            def __init__(self, connection_string: str):
+                self.connection_string = connection_string
+            
+            def query_database(self, query: str) -> str:
+                \"\"\"Execute SQL query and return results\"\"\"
+                try:
+                    conn = psycopg2.connect(self.connection_string)
+                    cursor = conn.cursor()
+                    
+                    cursor.execute(query)
+                    
+                    if query.strip().upper().startswith('SELECT'):
+                        results = cursor.fetchall()
+                        columns = [desc[0] for desc in cursor.description]
+                        
+                        # Format results as table
+                        formatted_results = []
+                        formatted_results.append(' | '.join(columns))
+                        formatted_results.append('-' * (len(' | '.join(columns))))
+                        
+                        for row in results:
+                            formatted_results.append(' | '.join(str(cell) for cell in row))
+                        
+                        return '\\n'.join(formatted_results)
+                    else:
+                        conn.commit()
+                        return f"Query executed successfully. Rows affected: {cursor.rowcount}"
+                
+                except Exception as e:
+                    return f"Database error: {str(e)}"
+                finally:
+                    if conn:
+                        conn.close()
+            
+            def get_schema(self, table_name: str) -> str:
+                \"\"\"Get table schema information\"\"\"
+                query = f\"\"\"
+                SELECT column_name, data_type, is_nullable, column_default
+                FROM information_schema.columns
+                WHERE table_name = '{table_name}'
+                ORDER BY ordinal_position;
+                \"\"\"
+                return self.query_database(query)
+        
+        # Create database-enabled agent
+        db_agent = Agent(
+            name="DatabaseAnalyst",
+            instructions="Analyze data using SQL queries. Always explain your queries.",
+            tools=[db_tool.query_database, db_tool.get_schema]
+        )
+        ```
+        
+        **API Integration Tool:**
+        ```python
+        import requests
+        import json
+        from typing import Optional, Dict, Any
+        
+        class APIIntegrationTool:
+            def __init__(self, base_url: str, api_key: Optional[str] = None):
+                self.base_url = base_url.rstrip('/')
+                self.headers = {}
+                if api_key:
+                    self.headers['Authorization'] = f'Bearer {api_key}'
+            
+            def make_api_call(self, endpoint: str, method: str = 'GET', 
+                            params: Optional[Dict] = None, 
+                            data: Optional[Dict] = None) -> str:
+                \"\"\"Make API call to external service\"\"\"
+                url = f"{self.base_url}/{endpoint.lstrip('/')}"
+                
+                try:
+                    response = requests.request(
+                        method=method,
+                        url=url,
+                        headers=self.headers,
+                        params=params,
+                        json=data,
+                        timeout=30
+                    )
+                    response.raise_for_status()
+                    
+                    return json.dumps(response.json(), indent=2)
+                    
+                except requests.RequestException as e:
+                    return f"API Error: {str(e)}"
+            
+            def get_api_documentation(self) -> str:
+                \"\"\"Get API documentation or schema\"\"\"
+                return self.make_api_call('/docs/openapi.json')
+        
+        # Create API-enabled agent
+        api_agent = Agent(
+            name="APIIntegrator",
+            instructions="Interact with external APIs to fetch and update data",
+            tools=[api_tool.make_api_call, api_tool.get_api_documentation]
+        )
+        ```
+        """)
+    
+    # Structured Outputs and Pydantic Integration
+    with st.expander("📋 Structured Outputs and Data Validation"):
+        st.markdown("""
+        ### Pydantic Models for Structured Responses
+        
+        **Complex Data Extraction:**
+        ```python
+        from pydantic import BaseModel, Field
+        from typing import List, Optional
+        from datetime import datetime
+        
+        class Contact(BaseModel):
+            name: str
+            email: str
+            phone: Optional[str] = None
+            
+        class Event(BaseModel):
+            title: str
+            date: datetime
+            location: str
+            attendees: List[Contact]
+            description: Optional[str] = None
+            
+        class EmailAnalysis(BaseModel):
+            sender: Contact
+            subject: str
+            events_mentioned: List[Event]
+            action_items: List[str]
+            sentiment: str = Field(description="positive, negative, or neutral")
+            priority: int = Field(ge=1, le=5, description="Priority from 1-5")
+            
+        # Agent that extracts structured data from emails
+        email_agent = Agent(
+            name="EmailAnalyzer",
+            instructions="Analyze emails and extract structured information",
+            output_type=EmailAnalysis
+        )
+        
+        # Usage
+        result = Runner.run_sync(email_agent, "Analyze this email: [email content]")
+        analysis = result.final_output_as(EmailAnalysis)
+        
+        print(f"Priority: {analysis.priority}")
+        print(f"Events found: {len(analysis.events_mentioned)}")
+        for event in analysis.events_mentioned:
+            print(f"- {event.title} on {event.date}")
+        ```
+        
+        **Financial Data Processing:**
+        ```python
+        from decimal import Decimal
+        from enum import Enum
+        
+        class TransactionType(str, Enum):
+            DEBIT = "debit"
+            CREDIT = "credit"
+            
+        class Transaction(BaseModel):
+            id: str
+            amount: Decimal
+            transaction_type: TransactionType
+            description: str
+            category: str
+            date: datetime
+            
+        class FinancialSummary(BaseModel):
+            total_income: Decimal
+            total_expenses: Decimal
+            net_balance: Decimal
+            transactions: List[Transaction]
+            top_categories: List[str]
+            
+        financial_agent = Agent(
+            name="FinancialAnalyzer",
+            instructions="Analyze financial data and provide structured summaries",
+            output_type=FinancialSummary,
+            tools=[self.categorize_transaction, self.validate_amount]
+        )
+        ```
+        
+        **Dynamic Schema Generation:**
+        ```python
+        def create_dynamic_model(field_definitions: Dict[str, type]):
+            \"\"\"Create Pydantic model dynamically\"\"\"
+            return create_model('DynamicModel', **field_definitions)
+        
+        # Example: Create model based on user requirements
+        user_fields = {
+            'customer_name': (str, ...),
+            'order_total': (float, Field(gt=0)),
+            'items': (List[str], [])
+        }
+        
+        DynamicOrderModel = create_dynamic_model(user_fields)
+        
+        dynamic_agent = Agent(
+            name="DynamicProcessor",
+            instructions="Process data according to dynamic schema",
+            output_type=DynamicOrderModel
+        )
+        ```
         # Save session to file
         session.save("user_session.json")
         
