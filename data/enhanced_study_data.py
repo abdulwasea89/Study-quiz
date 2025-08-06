@@ -295,35 +295,206 @@ def get_enhanced_building_agents_questions():
     }
 
 def get_enhanced_mcp_questions():
-    """Enhanced MCP questions with deeper technical understanding"""
+    """Enhanced MCP questions with comprehensive Level 2 certification content"""
     return {
-        "MCP Protocol Foundations": [
+        "HTTP Fundamentals - Level 1": [
             {
-                "question": "What fundamental communication problem does the Model Context Protocol solve in AI agent systems?",
+                "question": "What does HTTP stand for and what is its primary purpose in web communication?",
                 "options": [
-                    "Making AI models run faster",
-                    "Standardizing how AI models securely connect to and interact with external data sources and tools",
-                    "Reducing the cost of AI operations",
-                    "Making AI models more accurate"
+                    "HyperText Transfer Protocol - for transferring hypertext documents between web servers and clients",
+                    "High-Tech Transfer Protocol - for high-speed data transfer",
+                    "HyperText Transport Protocol - for secure communications",
+                    "Hybrid Transfer Protocol - for mixed media transfer"
+                ],
+                "correct": 0,
+                "explanation": "HTTP (HyperText Transfer Protocol) is the foundation of data communication on the World Wide Web, defining how messages are formatted and transmitted between web servers and clients.",
+                "difficulty": "Normal",
+                "framework": "Model Context Protocol (MCP)"
+            },
+            {
+                "question": "In the HTTP request-response cycle, what happens when a client sends a GET request?",
+                "options": [
+                    "The server deletes the requested resource",
+                    "The server retrieves and returns the requested resource without modifying it",
+                    "The server creates a new resource",
+                    "The server updates an existing resource"
                 ],
                 "correct": 1,
-                "explanation": "MCP provides a standardized, secure way for AI models to connect to external resources (databases, APIs, tools) without each integration requiring custom implementation.",
+                "explanation": "GET requests are idempotent and safe - they retrieve data without causing any side effects on the server, making them cacheable and suitable for repeated calls.",
+                "difficulty": "Normal",
+                "framework": "Model Context Protocol (MCP)"
+            }
+        ],
+
+        "REST Architecture Principles - Level 2": [
+            {
+                "question": "Why is statelessness a core principle of REST architecture, and how does it benefit system design?",
+                "options": [
+                    "It makes the system faster by reducing server load",
+                    "Each request contains all necessary information, enabling better scalability, reliability, and simplified server design",
+                    "It reduces the amount of data transmitted",
+                    "It makes the API more secure by default"
+                ],
+                "correct": 1,
+                "explanation": "Statelessness means each request is self-contained, allowing servers to be simplified, scaled horizontally, and made more reliable since no session state needs to be maintained between requests.",
+                "difficulty": "Intermediate",
+                "framework": "Model Context Protocol (MCP)"
+            },
+            {
+                "question": "How should URI design follow REST principles for resource identification and manipulation?",
+                "options": [
+                    "URIs should include action verbs like /getUser or /deleteProduct",
+                    "URIs should identify resources using nouns, with HTTP methods defining actions: /users/123 with GET, PUT, DELETE",
+                    "URIs should be as short as possible regardless of clarity",
+                    "URIs should include implementation details like database table names"
+                ],
+                "correct": 1,
+                "explanation": "REST URIs should identify resources (nouns) while HTTP methods define actions (verbs). This separation creates a uniform interface that's intuitive and consistent across the API.",
                 "difficulty": "Intermediate",
                 "framework": "Model Context Protocol (MCP)"
             }
         ],
 
-        "MCP Architecture and Implementation": [
+        "JSON-RPC 2.0 Protocol - Level 3": [
             {
-                "question": "When designing an MCP server for a financial data service, what security considerations are most critical?",
+                "question": "What is the fundamental difference between JSON-RPC Requests and Notifications, and when would you use each?",
                 "options": [
-                    "Making it as fast as possible",
-                    "Authentication, authorization, data encryption, audit logging, and secure communication channels",
-                    "Using the latest programming language",
-                    "Minimizing the number of features"
+                    "Requests are faster than Notifications",
+                    "Requests expect a response and include an 'id' field, while Notifications don't expect responses and omit the 'id' field",
+                    "Notifications are more secure than Requests",
+                    "There is no difference between them"
                 ],
                 "correct": 1,
-                "explanation": "Financial data requires robust security: strong authentication/authorization, end-to-end encryption, comprehensive audit trails, secure communication protocols, and compliance with financial regulations.",
+                "explanation": "Requests include an 'id' field and expect a response, enabling request-response patterns. Notifications omit the 'id' and are fire-and-forget, useful for events or commands where no response is needed.",
+                "difficulty": "Advanced",
+                "framework": "Model Context Protocol (MCP)"
+            },
+            {
+                "question": "How does JSON-RPC 2.0 handle batch requests, and what are the advantages of this approach?",
+                "options": [
+                    "Batch requests are not supported in JSON-RPC 2.0",
+                    "Multiple requests can be sent in a single JSON array, reducing network overhead and allowing parallel processing",
+                    "Batch requests require a special header",
+                    "Only notifications can be batched, not requests"
+                ],
+                "correct": 1,
+                "explanation": "JSON-RPC 2.0 supports batching by sending an array of request objects, reducing network round trips, improving performance, and enabling servers to process requests in parallel while maintaining proper response ordering.",
+                "difficulty": "Advanced",
+                "framework": "Model Context Protocol (MCP)"
+            }
+        ],
+
+        "MCP Fundamental Primitives - Level 4": [
+            {
+                "question": "In MCP architecture, how does the Client-Server relationship work, and what problem does this solve in AI agent systems?",
+                "options": [
+                    "MCP clients always run on the same machine as servers",
+                    "MCP clients (like Claude Desktop) connect to MCP servers to access external capabilities in a standardized, secure way",
+                    "MCP servers are only used for data storage",
+                    "MCP clients and servers are the same thing"
+                ],
+                "correct": 1,
+                "explanation": "MCP creates a standardized protocol where AI applications (clients) can securely connect to external services (servers) without requiring custom integrations for each service, solving the integration complexity problem.",
+                "difficulty": "PhD",
+                "framework": "Model Context Protocol (MCP)"
+            },
+            {
+                "question": "What does 'transport agnostic' mean in MCP context, and why is this architectural decision important?",
+                "options": [
+                    "MCP only works with HTTP transport",
+                    "MCP protocol can work over different communication layers (stdio, HTTP, WebSocket) without changing core functionality",
+                    "MCP automatically chooses the best transport method",
+                    "Transport agnostic means MCP doesn't use any transport layer"
+                ],
+                "correct": 1,
+                "explanation": "Transport agnostic design allows MCP to work over various communication channels while maintaining the same protocol semantics, providing flexibility in deployment scenarios and integration methods.",
+                "difficulty": "PhD",
+                "framework": "Model Context Protocol (MCP)"
+            }
+        ],
+
+        "Advanced MCP Implementation - Level 5": [
+            {
+                "question": "How do MCP security roots work, and what are the implications for different transport configurations?",
+                "options": [
+                    "Security roots are only cosmetic features",
+                    "Security roots define trusted execution boundaries and have different implications for stateless HTTP vs persistent connections",
+                    "Security roots are the same as file system roots",
+                    "Security roots are only used for authentication"
+                ],
+                "correct": 1,
+                "explanation": "Security roots establish cryptographic trust boundaries, with different security models for stateless HTTP (per-request verification) vs persistent connections (session-based trust), affecting performance and security trade-offs.",
+                "difficulty": "God Level",
+                "framework": "Model Context Protocol (MCP)"
+            },
+            {
+                "question": "In a production MCP deployment with sampling and progress notifications, how would you design the architecture for high availability and performance?",
+                "options": [
+                    "Use a single server for simplicity",
+                    "Implement load balancing, request routing, progress state management, and sampling result caching with failure recovery",
+                    "Only use HTTP transport for reliability",
+                    "Disable all advanced features for stability"
+                ],
+                "correct": 1,
+                "explanation": "Production MCP systems need sophisticated architecture: load balancers for server distribution, state management for progress tracking, caching layers for sampling results, and robust failure recovery mechanisms.",
+                "difficulty": "God Level",
+                "framework": "Model Context Protocol (MCP)"
+            }
+        ],
+
+        "MCP OpenAI Integration - Level 5": [
+            {
+                "question": "How does MCP integration with OpenAI Agents SDK enable new capabilities, and what are the architectural considerations?",
+                "options": [
+                    "MCP just replaces OpenAI's built-in tools",
+                    "MCP enables OpenAI agents to access external systems through standardized interfaces while maintaining security and observability",
+                    "MCP and OpenAI agents cannot work together",
+                    "MCP only provides data storage for OpenAI agents"
+                ],
+                "correct": 1,
+                "explanation": "MCP integration allows OpenAI agents to securely access external capabilities (databases, APIs, tools) through standardized interfaces, enabling complex workflows while maintaining proper security boundaries and observability.",
+                "difficulty": "God Level",
+                "framework": "Model Context Protocol (MCP)"
+            },
+            {
+                "question": "When implementing MCP with OpenAI agents for financial services, what are the critical considerations for compliance and security?",
+                "options": [
+                    "Only consider data encryption",
+                    "Implement comprehensive logging, access controls, data residency compliance, audit trails, and secure credential management",
+                    "Use default security settings",
+                    "Focus only on performance optimization"
+                ],
+                "correct": 1,
+                "explanation": "Financial services require strict compliance: comprehensive audit logging, fine-grained access controls, data residency requirements, complete audit trails, secure credential management, and regulatory compliance (SOX, PCI-DSS, GDPR).",
+                "difficulty": "God Level",
+                "framework": "Model Context Protocol (MCP)"
+            }
+        ],
+
+        "Advanced MCP Protocol Implementation": [
+            {
+                "question": "How would you design an MCP server to handle high-frequency trading data with sub-millisecond latency requirements?",
+                "options": [
+                    "Use standard HTTP with caching",
+                    "Implement memory-mapped files, zero-copy operations, custom binary protocol over TCP, and lock-free data structures",
+                    "Use a simple database connection",
+                    "Rely on cloud services for speed"
+                ],
+                "correct": 1,
+                "explanation": "Sub-millisecond latency requires advanced techniques: memory-mapped files for data access, zero-copy network operations, custom binary protocols instead of JSON-RPC, lock-free concurrent data structures, and CPU affinity optimization.",
+                "difficulty": "God Level",
+                "framework": "Model Context Protocol (MCP)"
+            },
+            {
+                "question": "In a distributed MCP deployment across multiple data centers, how would you handle consistency and availability trade-offs?",
+                "options": [
+                    "Always prioritize consistency over availability",
+                    "Implement eventual consistency with conflict resolution, regional failover, and context-aware routing based on CAP theorem principles",
+                    "Use synchronous replication everywhere",
+                    "Ignore consistency issues"
+                ],
+                "correct": 1,
+                "explanation": "Distributed MCP systems need CAP theorem awareness: eventual consistency for performance, sophisticated conflict resolution algorithms, regional failover strategies, context-aware request routing, and careful consistency vs availability trade-offs based on use case requirements.",
                 "difficulty": "God Level",
                 "framework": "Model Context Protocol (MCP)"
             }

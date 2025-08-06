@@ -86,8 +86,9 @@ class TestGenerator:
         current_total = sum(distribution.values())
         if current_total != total_questions:
             # Add or remove questions from the largest topic
-            largest_topic = max(distribution.keys(), key=lambda k: distribution[k])
-            distribution[largest_topic] = max(0, distribution[largest_topic] + (total_questions - current_total))
+            if distribution:
+                largest_topic = max(distribution.keys(), key=lambda k: distribution[k])
+                distribution[largest_topic] = max(0, distribution[largest_topic] + (total_questions - current_total))
         
         return distribution
     

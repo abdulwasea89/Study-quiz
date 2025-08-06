@@ -1,0 +1,42 @@
+Model Context Protocol (MCP) 
+Level 2 Certification Exam
+Total Questions: 100
+Duration: 2 Hours
+Difficulty Level: Advanced (NOT beginner-level)
+
+Topics Covered: The quiz is divided into several key areas:
+HTTP: Foundational concepts, request-response cycle, message structure, methods, and status codes.
+REST: Architectural principles like statelessness, resource identification using URIs, best practices for naming, and status code usage.
+JSON-RPC 2.0: The specifics of the protocol, including the distinction between Requests and Notifications, the structure of Response and Error objects, reserved method names, and parameter handling.
+MCP Fundamental Primitives: The core architecture of MCP, the roles of the MCP Client and Server, the problem it solves, the basic message flow (e.g., ListTools, CallTool), and the concept of being "transport agnostic".
+Advanced MCP Topics: Complex features such as sampling, logging and progress notifications, security via "roots," and the implications of different transport configurations like stateless HTTP.
+MCP and OpenAI Agents SDK Integration: Practical application of MCP within the OpenAI Agents framework.
+
+Learning Material:
+
+HTTP:
+https://github.com/panaversity/learn-agentic-ai/tree/main/03_ai_protocols/01_mcp/01_http_theory 
+
+REST:
+
+https://github.com/panaversity/learn-agentic-ai/tree/main/03_ai_protocols/01_mcp/02_rest 
+
+JSON RPC:
+
+https://github.com/panaversity/learn-agentic-ai/tree/main/03_ai_protocols/01_mcp/03_json_rpc 
+
+Anthropic MCP Fundamentals Course:
+
+https://anthropic.skilljar.com/introduction-to-model-context-protocol
+
+https://github.com/panaversity/learn-agentic-ai/tree/main/03_ai_protocols/01_mcp/04_fundamental_%20primitives 
+
+Anthropic MCP Advanced Course:
+
+https://anthropic.skilljar.com/model-context-protocol-advanced-topics 
+
+https://github.com/panaversity/learn-agentic-ai/tree/main/03_ai_protocols/01_mcp/05_capabilities_and_transport 
+
+MCP with OpenAI Agents SDK Integration
+
+https://github.com/panaversity/learn-agentic-ai/tree/main/03_ai_protocols/01_mcp/06_openai_agents_sdk_integration

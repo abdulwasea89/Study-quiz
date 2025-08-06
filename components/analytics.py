@@ -1,17 +1,38 @@
 """
-Analytics and progress tracking component
+Enhanced analytics and progress tracking component with real-time data
 """
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
+import json
 from utils.progress_tracker import ProgressTracker
 
 def analytics_dashboard():
-    st.header("📊 Analytics Dashboard")
+    st.header("📊 Real-Time Analytics Dashboard")
+    st.markdown("Live progress tracking with accurate, up-to-date information")
+    
+    # Initialize progress tracker if not exists
+    if 'progress_tracker' not in st.session_state:
+        st.session_state.progress_tracker = ProgressTracker()
     
     progress_tracker = st.session_state.progress_tracker
+    
+    # Real-time update button
+    col1, col2, col3 = st.columns([1, 1, 2])
+    with col1:
+        if st.button("🔄 Refresh Data", help="Update all analytics with latest data"):
+            progress_tracker.refresh_data()
+            st.rerun()
+    
+    with col2:
+        auto_refresh = st.checkbox("Auto Refresh", help="Automatically update data every 30 seconds")
+    
+    if auto_refresh:
+        import time
+        time.sleep(1)  # Small delay for auto-refresh
+        st.rerun()
     
     # Overall statistics
     stats = progress_tracker.get_overall_stats()
@@ -97,19 +118,30 @@ def analytics_dashboard():
     if topic_data:
         df_topics = pd.DataFrame(topic_data)
         
-        # Topic performance chart
+        # Enhanced topic performance chart with real-time updates
         fig_topics = px.bar(
             df_topics,
             x='Topic',
             y='Average Score',
-            title='Average Score by Topic',
+            title='Real-Time Average Score by Topic',
             text='Average Score',
             color='Average Score',
-            color_continuous_scale='RdYlGn'
+            color_continuous_scale='RdYlGn',
+            hover_data=['Tests Taken', 'Best Score']
         )
-        fig_topics.update_traces(texttemplate='%{text:.1f}%', textposition='outside')
-        fig_topics.update_layout(showlegend=False, xaxis_tickangle=-45)
-        st.plotly_chart(fig_topics, use_container_width=True)
+        fig_topics.update_traces(
+            texttemplate='%{text:.1f}%', 
+            textposition='outside',
+            hovertemplate='<b>%{x}</b><br>Average Score: %{y:.1f}%<br>Tests Taken: %{customdata[0]}<br>Best Score: %{customdata[1]:.1f}%<extra></extra>'
+        )
+        fig_topics.update_layout(
+            showlegend=False, 
+            xaxis_tickangle=-45,
+            title_x=0.5,
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)'
+        )
+        st.plotly_chart(fig_topics, use_container_width=True, key="topic_performance")
         
         # Improvement trends
         st.subheader("📈 Improvement Trends")
@@ -153,15 +185,54 @@ def analytics_dashboard():
                 'Tests': 'sum'
             }).reset_index()
             
-            # Study time over time
+            # Enhanced study time visualization
             fig_time = px.line(
                 daily_stats,
                 x='Date',
                 y='Duration',
-                title='Daily Study Time (minutes)',
-                markers=True
+                title='Daily Study Time Progress (Real-Time)',
+                markers=True,
+                line_shape='spline'
             )
-            st.plotly_chart(fig_time, use_container_width=True)
+            fig_time.update_traces(
+                line=dict(color='#1f77b4', width=3),
+                marker=dict(size=8, color='#ff7f0e')
+            )
+            fig_time.update_layout(
+                title_x=0.5,
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis_title="Date",
+                yaxis_title="Minutes"
+            )
+            st.plotly_chart(fig_time, use_container_width=True, key="study_time")
+            
+            # Add moving average trend line
+            if len(daily_stats) >= 7:
+                daily_stats['7_day_avg'] = daily_stats['Duration'].rolling(window=7, center=True).mean()
+                
+                fig_trend = go.Figure()
+                fig_trend.add_trace(go.Scatter(
+                    x=daily_stats['Date'],
+                    y=daily_stats['Duration'],
+                    mode='markers',
+                    name='Daily Study Time',
+                    marker=dict(size=8, color='lightblue')
+                ))
+                fig_trend.add_trace(go.Scatter(
+                    x=daily_stats['Date'],
+                    y=daily_stats['7_day_avg'],
+                    mode='lines',
+                    name='7-Day Average',
+                    line=dict(color='red', width=3, dash='dash')
+                ))
+                fig_trend.update_layout(
+                    title='Study Time with Trend Analysis',
+                    title_x=0.5,
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)'
+                )
+                st.plotly_chart(fig_trend, use_container_width=True, key="trend_analysis")
             
             # Activity heatmap
             col1, col2 = st.columns(2)

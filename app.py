@@ -8,6 +8,8 @@ import os
 from components.flashcards import flashcard_system
 from components.mock_test import mock_test_system
 from components.analytics import analytics_dashboard
+from components.live_dashboard import show_live_dashboard
+from components.documentation import show_comprehensive_docs
 from data.study_data import get_flashcards, get_topics, get_summary_data
 from utils.progress_tracker import ProgressTracker
 
@@ -48,8 +50,8 @@ def main():
     
     page = st.sidebar.selectbox(
         "Choose your study mode:",
-        ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets", "🔗 Learning Resources", "📖 Documentation"],
-        index=["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets", "🔗 Learning Resources", "📖 Documentation"].index(default_page) if default_page in ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets", "🔗 Learning Resources", "📖 Documentation"] else 0
+        ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "🔴 Live Dashboard", "📋 Summary Sheets", "🔗 Learning Resources", "📖 Documentation"],
+        index=["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "🔴 Live Dashboard", "📋 Summary Sheets", "🔗 Learning Resources", "📖 Documentation"].index(default_page) if default_page in ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "🔴 Live Dashboard", "📋 Summary Sheets", "🔗 Learning Resources", "📖 Documentation"] else 0
     )
     
     # Display current session stats in sidebar
@@ -71,12 +73,13 @@ def main():
         mock_test_system()
     elif page == "📊 Analytics":
         analytics_dashboard()
+    elif page == "🔴 Live Dashboard":
+        show_live_dashboard()
     elif page == "📋 Summary Sheets":
         show_summary_sheets()
     elif page == "🔗 Learning Resources":
         show_learning_resources()
     elif page == "📖 Documentation":
-        from components.documentation import show_comprehensive_docs
         show_comprehensive_docs()
 
 def show_dashboard():

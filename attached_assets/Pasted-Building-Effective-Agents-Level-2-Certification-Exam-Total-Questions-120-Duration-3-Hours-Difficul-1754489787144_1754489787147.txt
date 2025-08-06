@@ -1,0 +1,67 @@
+Building Effective Agents
+Level 2 Certification Exam
+Total Questions: 120
+Duration: 3 Hours
+Difficulty Level: Advanced (NOT beginner-level)
+
+
+Learning Material:
+
+Building Effective Agents Article:
+https://www.anthropic.com/engineering/building-effective-agents
+
+Workflows and Agents:
+https://github.com/panaversity/learn-agentic-ai/tree/main/04_building_effective_agents/01_agents_workflows 
+
+Building Blocks - LLM Augmentation:
+https://github.com/panaversity/learn-agentic-ai/tree/main/04_building_effective_agents/02_building_blocks 
+
+Design Patterns:
+https://github.com/panaversity/learn-agentic-ai/tree/main/04_building_effective_agents/03_design_patterns 
+
+Agentic Memory, Neo4j AuraDB & Knowledge Graph:
+https://github.com/panaversity/learn-agentic-ai/tree/main/04_building_effective_agents/04_augumentation_memory 
+
+Graphiti:
+https://github.com/panaversity/learn-agentic-ai/tree/main/04_building_effective_agents/04_augumentation_memory/06_graphiti_learning_path 
+
+Augmentation Retrieval:
+https://github.com/panaversity/learn-agentic-ai/tree/main/04_building_effective_agents/05_augumention_retrival 
+
+Agentic Payments and Agentic Economy:
+https://github.com/panaversity/learn-agentic-ai/tree/main/04_building_effective_agents/06_payments_economy 
+
+How a Beginner Can Prepare 🧑‍💻
+A beginner should follow a structured study plan using the learning materials listed in the exam guide. The topics are sequential and build on each other.
+
+1. Foundational Concepts: Workflows and Agents
+Objective: Learn the core distinction between agents that dynamically direct their own processes and workflows that follow predefined paths.
+Learning Material: Start with the "Workflows and Agents" resources.
+2. Core Components: LLM Augmentation
+Objective: Understand the three primary ways to enhance a Large Language Model (LLM):
+Retrieval: Fetching external information to ground the model.
+Tools: Interacting with external systems or APIs to perform actions.
+Memory: Storing and recalling past interactions to maintain context.
+Learning Material: Study the "Building Blocks - LLM Augmentation" resources.
+3. Practical Architectures: Design Patterns
+Objective: Familiarize yourself with common patterns for building agentic systems. Focus on the purpose and implementation of each:
+Routing: Classifying a query to delegate it to the best-specialized agent.
+Prompt Chaining: Breaking a complex task into a sequence of smaller, manageable steps.
+Parallelization: Running multiple agents concurrently and aggregating their findings.
+Orchestrator-Worker: Using a central planner agent to dynamically create and delegate subtasks to worker agents.
+Evaluator-Optimizer (Reflection): Using an iterative loop where one agent generates a solution and another provides feedback for refinement.
+Learning Material: Go through the "Design Patterns" section and analyze the provided code examples.
+4. Advanced Memory: Knowledge Graphs & Neo4j
+Objective: Grasp how knowledge graphs offer a flexible model for interconnected data, representing relationships as first-class citizens. Learn the basics of the Cypher query language for Neo4j, including commands like
+ MERGE to prevent duplicate nodes.
+Learning Material: Use the "Agentic Memory, Neo4j AuraDB & Knowledge Graph" materials.
+5. Specialized Tools: Graphiti
+Objective: Understand how a tool like Graphiti helps manage and build temporal knowledge graphs. It can integrate various data types, including chat histories and unstructured text , and automatically builds an ontology from incoming data. It tracks not just
+ what happened but also when it happened and when it was recorded.
+Learning Material: Deep dive into the "Graphiti" learning path.
+6. Applied Skills: Augmentation Retrieval
+Objective: Learn the practical application of retrieval-augmented generation (RAG). This includes using vector databases to store and retrieve information based on semantic meaning and enabling the LLM to decide when to call a search function.
+Learning Material: Review the "Augmentation Retrieval" section.
+7. Real-World Application: Agentic Payments & Economy
+Objective: Understand how agents interact with the real-world economy. This involves using APIs as "tools" or "limbs" to connect with services like Stripe. A key challenge is ensuring security and building user trust to prevent fraud.
+Learning Material: Study the "Agentic Payments and Economy" resources to see how an MCP server enables agents to interact with the Stripe API.

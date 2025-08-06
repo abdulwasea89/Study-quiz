@@ -1,11 +1,12 @@
 """
-Progress tracking utilities for monitoring study performance
+Enhanced progress tracking utilities with real-time monitoring capabilities
 """
 import json
 import os
 from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional
 import streamlit as st
+import pandas as pd
 
 class ProgressTracker:
     def __init__(self, data_file: str = "study_progress.json"):
@@ -28,7 +29,11 @@ class ProgressTracker:
             "test_results": [],
             "topic_performance": {},
             "study_streak": 0,
-            "last_study_date": None
+            "last_study_date": None,
+            "current_session": {},
+            "live_performance": [],
+            "framework_performance": {},
+            "difficulty_performance": {}
         }
     
     def _save_data(self):
@@ -69,6 +74,156 @@ class ProgressTracker:
         
         self._update_study_streak()
         self._save_data()
+    
+    def refresh_data(self):
+        """Refresh and reload data for real-time updates"""
+        self.data = self._load_data()
+        self._save_data()
+    
+    def get_current_session_stats(self) -> Dict[str, Any]:
+        """Get real-time current session statistics"""
+        current_session = st.session_state.get('current_study_session', {})
+        
+        duration = 0
+        if 'start_time' in current_session:
+            start_time = current_session['start_time']
+            if isinstance(start_time, str):
+                start_time = datetime.fromisoformat(start_time)
+            duration = (datetime.now() - start_time).total_seconds() / 60
+        
+        total_questions = current_session.get('total_questions', 0)
+        correct_answers = current_session.get('correct_answers', 0)
+        current_accuracy = (correct_answers / total_questions * 100) if total_questions > 0 else 0
+        
+        return {
+            'duration': duration,
+            'questions_answered': total_questions,
+            'current_accuracy': current_accuracy,
+            'correct_streak': current_session.get('correct_streak', 0),
+            'delta_duration': current_session.get('delta_duration', 0),
+            'delta_questions': current_session.get('delta_questions', 0),
+            'delta_accuracy': current_session.get('delta_accuracy', 0),
+            'delta_streak': current_session.get('delta_streak', 0)
+        }
+    
+    def get_live_session_data(self) -> List[Dict[str, Any]]:
+        """Get live session data for real-time charts"""
+        return self.data.get('live_performance', [])
+    
+    def update_live_performance(self, question_num: int, correct: bool, accuracy: float):
+        """Update live performance tracking"""
+        if 'live_performance' not in self.data:
+            self.data['live_performance'] = []
+        
+        self.data['live_performance'].append({
+            'question_num': question_num,
+            'correct': correct,
+            'accuracy': accuracy,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+        # Keep only last 50 questions for performance
+        if len(self.data['live_performance']) > 50:
+            self.data['live_performance'] = self.data['live_performance'][-50:]
+        
+        self._save_data()
+    
+    def get_framework_performance(self) -> List[Dict[str, Any]]:
+        """Get performance data by framework for real-time analysis"""
+        framework_stats = []
+        framework_data = self.data.get('framework_performance', {})
+        
+        for framework, stats in framework_data.items():
+            if stats.get('total_questions', 0) > 0:
+                avg_score = stats['total_score'] / stats['total_questions']
+                framework_stats.append({
+                    'framework': framework,
+                    'average_score': avg_score,
+                    'questions_answered': stats['total_questions'],
+                    'best_score': stats.get('best_score', 0)
+                })
+        
+        return framework_stats
+    
+    def update_framework_performance(self, framework: str, score: float):
+        """Update framework-specific performance"""
+        if 'framework_performance' not in self.data:
+            self.data['framework_performance'] = {}
+        
+        if framework not in self.data['framework_performance']:
+            self.data['framework_performance'][framework] = {
+                'total_questions': 0,
+                'total_score': 0,
+                'best_score': 0
+            }
+        
+        stats = self.data['framework_performance'][framework]
+        stats['total_questions'] += 1
+        stats['total_score'] += score
+        stats['best_score'] = max(stats['best_score'], score)
+        
+        self._save_data()
+    
+    def get_difficulty_performance(self) -> List[Dict[str, Any]]:
+        """Get performance data by difficulty level"""
+        difficulty_stats = []
+        difficulty_data = self.data.get('difficulty_performance', {})
+        
+        for difficulty, stats in difficulty_data.items():
+            if stats.get('total_questions', 0) > 0:
+                avg_score = stats['total_score'] / stats['total_questions']
+                difficulty_stats.append({
+                    'difficulty': difficulty,
+                    'average_score': avg_score,
+                    'questions_answered': stats['total_questions'],
+                    'best_score': stats.get('best_score', 0)
+                })
+        
+        return difficulty_stats
+    
+    def get_difficulty_recommendations(self) -> List[Dict[str, str]]:
+        """Get personalized difficulty recommendations"""
+        recommendations = []
+        difficulty_data = self.data.get('difficulty_performance', {})
+        
+        for difficulty, stats in difficulty_data.items():
+            if stats.get('total_questions', 0) >= 5:
+                avg_score = stats['total_score'] / stats['total_questions']
+                
+                if avg_score < 60:
+                    recommendations.append({
+                        'type': 'review',
+                        'message': f"Review {difficulty} concepts - current average: {avg_score:.1f}%"
+                    })
+                elif avg_score >= 85:
+                    recommendations.append({
+                        'type': 'challenge',
+                        'message': f"Excellent {difficulty} performance ({avg_score:.1f}%)! Ready for harder challenges."
+                    })
+                else:
+                    recommendations.append({
+                        'type': 'focus',
+                        'message': f"Keep practicing {difficulty} - you're improving ({avg_score:.1f}%)"
+                    })
+        
+        return recommendations
+    
+    def get_session_timeline(self) -> List[Dict[str, Any]]:
+        """Get timeline data for current session"""
+        timeline_data = []
+        current_session = st.session_state.get('current_study_session', {})
+        
+        if 'timeline' in current_session:
+            for event in current_session['timeline']:
+                timeline_data.append({
+                    'start_time': event['start_time'],
+                    'end_time': event.get('end_time', datetime.now()),
+                    'activity': event['activity'],
+                    'result': event.get('result', 'ongoing'),
+                    'details': event.get('details', '')
+                })
+        
+        return timeline_data
     
     def record_flashcard_study(self, session_id: str, term: str, correct: bool, response_time: Optional[float] = None):
         """Record flashcard study activity"""
