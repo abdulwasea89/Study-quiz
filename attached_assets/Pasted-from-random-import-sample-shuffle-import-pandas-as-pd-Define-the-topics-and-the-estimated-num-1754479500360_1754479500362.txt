@@ -1,0 +1,41 @@
+from random import sample, shuffle
+import pandas as pd
+
+# Define the topics and the estimated number of questions per topic for 120-question mock test
+topics = {
+    "Workflows vs Agents": 15,
+    "LLM Augmentation": 20,
+    "Design Patterns": 25,
+    "Agentic Memory & Knowledge Graphs": 20,
+    "Graphiti": 10,
+    "Augmentation Retrieval": 15,
+    "Agentic Payments & Economy": 15,
+}
+
+# Flashcards (term-definition pairs)
+flashcards = {
+    "RAG (Retrieval-Augmented Generation)": "Combines retrieval from external sources with LLM generation to produce grounded responses.",
+    "Planner-Worker Pattern": "A design pattern where a planner agent creates and delegates subtasks to worker agents.",
+    "MERGE in Cypher": "Creates a node if it does not exist, avoids duplication in knowledge graphs.",
+    "Graphiti": "A tool that tracks events, builds ontologies, and supports temporal knowledge graphs from unstructured data.",
+    "Tool Use in Agents": "Allows LLMs to perform actions like API calls, database queries, or file manipulations.",
+    "Semantic Search": "Search technique using vector similarity based on meaning rather than exact keyword matching.",
+    "Agentic Economy": "Concept where autonomous agents participate in economic activities via APIs, often securely through protocols like MCP."
+}
+
+# Summary data for creating diagrams/sheets
+summary_data = {
+    "Components of Agentic Systems": ["Retrieval", "Tools", "Memory"],
+    "Common Agent Design Patterns": ["Routing", "Prompt Chaining", "Parallelization", "Planner-Worker", "Evaluator-Optimizer"],
+    "Memory Tools": ["Neo4j", "Graphiti"],
+    "Agent Capabilities": ["Search", "Tool Use", "Reflection", "Delegation"],
+    "Secure Economy Integration": ["Stripe API", "MCP Tool Call", "User Trust Mechanisms"]
+}
+
+# Convert flashcards and summary data to DataFrames for display
+flashcards_df = pd.DataFrame(flashcards.items(), columns=["Term", "Definition"])
+summary_df = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in summary_data.items()]))
+
+# Display the flashcards and summary sheets
+import caas_jupyter_tools as tools; tools.display_dataframe_to_user(name="Agentic AI Flashcards", dataframe=flashcards_df)
+tools.display_dataframe_to_user(name="Agentic AI Summary Sheets", dataframe=summary_df)
