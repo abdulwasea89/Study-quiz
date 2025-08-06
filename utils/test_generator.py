@@ -1,0 +1,104 @@
+"""
+Test generation utilities for creating mock tests
+"""
+import random
+from typing import Dict, List, Any
+from data.study_data import get_topics, get_questions_by_topic
+
+class TestGenerator:
+    def __init__(self):
+        self.topics = get_topics()
+        self.questions_pool = get_questions_by_topic()
+    
+    def generate_mock_test(self, total_questions: int = 120, custom_distribution: Dict[str, int] = None) -> List[Dict[str, Any]]:
+        """
+        Generate a mock test with specified number of questions
+        
+        Args:
+            total_questions: Total number of questions for the test
+            custom_distribution: Custom distribution of questions per topic
+        
+        Returns:
+            List of question dictionaries
+        """
+        if custom_distribution is None:
+            # Use default distribution from topics
+            distribution = self._calculate_distribution(total_questions)
+        else:
+            distribution = custom_distribution
+        
+        test_questions = []
+        
+        for topic, num_questions in distribution.items():
+            if topic in self.questions_pool:
+                topic_questions = self.questions_pool[topic]
+                
+                # If we need more questions than available, repeat some
+                if num_questions > len(topic_questions):
+                    selected = topic_questions * (num_questions // len(topic_questions) + 1)
+                    selected = selected[:num_questions]
+                else:
+                    selected = random.sample(topic_questions, min(num_questions, len(topic_questions)))
+                
+                # Add topic information to each question
+                for question in selected:
+                    question_copy = question.copy()
+                    question_copy['topic'] = topic
+                    test_questions.append(question_copy)
+        
+        # Shuffle the final test questions
+        random.shuffle(test_questions)
+        
+        # Add question numbers
+        for i, question in enumerate(test_questions, 1):
+            question['question_number'] = i
+        
+        return test_questions
+    
+    def _calculate_distribution(self, total_questions: int) -> Dict[str, int]:
+        """Calculate question distribution based on topic weights"""
+        total_weight = sum(self.topics.values())
+        distribution = {}
+        
+        for topic, weight in self.topics.items():
+            questions_for_topic = round((weight / total_weight) * total_questions)
+            distribution[topic] = questions_for_topic
+        
+        # Adjust for rounding errors
+        current_total = sum(distribution.values())
+        if current_total != total_questions:
+            # Add or remove questions from the largest topic
+            largest_topic = max(distribution.keys(), key=lambda k: distribution[k])
+            distribution[largest_topic] += (total_questions - current_total)
+        
+        return distribution
+    
+    def generate_topic_test(self, topic: str, num_questions: int = 10) -> List[Dict[str, Any]]:
+        """Generate a test focused on a specific topic"""
+        if topic not in self.questions_pool:
+            return []
+        
+        topic_questions = self.questions_pool[topic]
+        
+        # Select questions (with repetition if needed)
+        if num_questions > len(topic_questions):
+            selected = topic_questions * (num_questions // len(topic_questions) + 1)
+            selected = selected[:num_questions]
+        else:
+            selected = random.sample(topic_questions, min(num_questions, len(topic_questions)))
+        
+        # Add metadata
+        for i, question in enumerate(selected, 1):
+            question['topic'] = topic
+            question['question_number'] = i
+        
+        random.shuffle(selected)
+        return selected
+    
+    def get_available_topics(self) -> List[str]:
+        """Get list of available topics for testing"""
+        return list(self.topics.keys())
+    
+    def get_topic_question_count(self, topic: str) -> int:
+        """Get number of available questions for a topic"""
+        return len(self.questions_pool.get(topic, []))
