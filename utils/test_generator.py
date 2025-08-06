@@ -10,6 +10,11 @@ class TestGenerator:
         self.topics = get_topics()
         self.questions_pool = get_questions_by_topic()
         self.difficulty_levels = get_difficulty_levels()
+        self.frameworks = {
+            "Building Effective Agents": ["Agent Architecture", "Design Patterns", "Memory Systems", "Tool Integration", "Retrieval Systems", "Economic Integration"],
+            "Model Context Protocol (MCP)": ["MCP Fundamentals", "Transport Layers", "HTTP Theory", "REST Architecture", "JSON-RPC", "Security", "MCP OpenAI Integration"],
+            "OpenAI Agents SDK": ["OpenAI Agents SDK Fundamentals", "OpenAI Agents Implementation", "OpenAI Tools and Functions", "OpenAI Handoffs and Multi-Agent", "OpenAI Sessions and State", "OpenAI Guardrails and Security", "OpenAI Tracing and Monitoring"]
+        }
     
     def generate_mock_test(self, total_questions: int = 120, custom_distribution: Optional[Dict[str, int]] = None) -> List[Dict[str, Any]]:
         """
@@ -70,9 +75,51 @@ class TestGenerator:
         if current_total != total_questions:
             # Add or remove questions from the largest topic
             largest_topic = max(distribution.keys(), key=lambda k: distribution[k])
-            distribution[largest_topic] += (total_questions - current_total)
+            distribution[largest_topic] = max(0, distribution[largest_topic] + (total_questions - current_total))
         
         return distribution
+    
+    def generate_framework_test(self, framework: str, difficulty: str = None, num_questions: int = 50) -> List[Dict[str, Any]]:
+        """Generate test for specific framework and difficulty"""
+        if framework not in self.frameworks:
+            return []
+        
+        relevant_topics = self.frameworks[framework]
+        test_questions = []
+        
+        for topic in relevant_topics:
+            if topic in self.questions_pool:
+                topic_questions = self.questions_pool[topic]
+                
+                # Filter by difficulty if specified
+                if difficulty and difficulty != "All Levels":
+                    topic_questions = [q for q in topic_questions if q.get('difficulty') == difficulty]
+                
+                # Add framework questions
+                for question in topic_questions:
+                    question_copy = question.copy()
+                    question_copy['topic'] = topic
+                    question_copy['framework'] = framework
+                    test_questions.append(question_copy)
+        
+        # Limit to requested number
+        if len(test_questions) > num_questions:
+            test_questions = random.sample(test_questions, num_questions)
+        
+        random.shuffle(test_questions)
+        
+        for i, question in enumerate(test_questions, 1):
+            question['question_number'] = i
+        
+        return test_questions
+    
+    def get_available_frameworks(self) -> List[str]:
+        """Get list of available frameworks"""
+        return list(self.frameworks.keys())
+    
+    def get_framework_topics(self, framework: str) -> List[str]:
+        """Get topics for a specific framework"""
+        return self.frameworks.get(framework, [])
     
     def generate_topic_test(self, topic: str, num_questions: int = 10) -> List[Dict[str, Any]]:
         """Generate a test focused on a specific topic"""

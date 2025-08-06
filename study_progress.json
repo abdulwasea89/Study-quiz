@@ -1,0 +1,283 @@
+{
+  "sessions": [
+    {
+      "session_id": "session_20250806_115336",
+      "start_time": "2025-08-06T11:53:36.999468",
+      "end_time": "2025-08-06T11:56:51.777375",
+      "flashcards_studied": 0,
+      "tests_taken": 13,
+      "test_scores": [
+        50.0,
+        50.0,
+        0.0,
+        0.0,
+        66.66666666666666,
+        66.66666666666666,
+        100.0,
+        0.0,
+        100.0,
+        0.0,
+        0.0,
+        100.0,
+        100.0
+      ],
+      "topics_covered": [
+        "LLM Augmentation",
+        "Graphiti",
+        "JSON-RPC 2.0",
+        "Advanced MCP Topics",
+        "Augmentation Retrieval",
+        "MCP Fundamental Primitives",
+        "Design Patterns",
+        "Workflows vs Agents",
+        "REST Architecture",
+        "HTTP Fundamentals",
+        "Agentic Memory & Knowledge Graphs",
+        "MCP OpenAI Integration",
+        "Agentic Payments & Economy"
+      ],
+      "duration": 3.24629845
+    }
+  ],
+  "flashcard_stats": {},
+  "test_results": [
+    {
+      "session_id": "session_20250806_115336",
+      "date": "2025-08-06T11:56:51.743361",
+      "topic": "LLM Augmentation",
+      "score": 50.0,
+      "total_questions": 2,
+      "correct_answers": 1,
+      "accuracy": 50.0
+    },
+    {
+      "session_id": "session_20250806_115336",
+      "date": "2025-08-06T11:56:51.744921",
+      "topic": "HTTP Fundamentals",
+      "score": 50.0,
+      "total_questions": 2,
+      "correct_answers": 1,
+      "accuracy": 50.0
+    },
+    {
+      "session_id": "session_20250806_115336",
+      "date": "2025-08-06T11:56:51.747901",
+      "topic": "Graphiti",
+      "score": 0.0,
+      "total_questions": 1,
+      "correct_answers": 0,
+      "accuracy": 0.0
+    },
+    {
+      "session_id": "session_20250806_115336",
+      "date": "2025-08-06T11:56:51.750838",
+      "topic": "Agentic Memory & Knowledge Graphs",
+      "score": 0.0,
+      "total_questions": 2,
+      "correct_answers": 0,
+      "accuracy": 0.0
+    },
+    {
+      "session_id": "session_20250806_115336",
+      "date": "2025-08-06T11:56:51.753082",
+      "topic": "Workflows vs Agents",
+      "score": 66.66666666666666,
+      "total_questions": 3,
+      "correct_answers": 2,
+      "accuracy": 66.66666666666666
+    },
+    {
+      "session_id": "session_20250806_115336",
+      "date": "2025-08-06T11:56:51.759472",
+      "topic": "MCP OpenAI Integration",
+      "score": 66.66666666666666,
+      "total_questions": 3,
+      "correct_answers": 2,
+      "accuracy": 66.66666666666666
+    },
+    {
+      "session_id": "session_20250806_115336",
+      "date": "2025-08-06T11:56:51.761299",
+      "topic": "Design Patterns",
+      "score": 100.0,
+      "total_questions": 2,
+      "correct_answers": 2,
+      "accuracy": 100.0
+    },
+    {
+      "session_id": "session_20250806_115336",
+      "date": "2025-08-06T11:56:51.764276",
+      "topic": "JSON-RPC 2.0",
+      "score": 0.0,
+      "total_questions": 1,
+      "correct_answers": 0,
+      "accuracy": 0.0
+    },
+    {
+      "session_id": "session_20250806_115336",
+      "date": "2025-08-06T11:56:51.766323",
+      "topic": "REST Architecture",
+      "score": 100.0,
+      "total_questions": 1,
+      "correct_answers": 1,
+      "accuracy": 100.0
+    },
+    {
+      "session_id": "session_20250806_115336",
+      "date": "2025-08-06T11:56:51.769873",
+      "topic": "Advanced MCP Topics",
+      "score": 0.0,
+      "total_questions": 3,
+      "correct_answers": 0,
+      "accuracy": 0.0
+    },
+    {
+      "session_id": "session_20250806_115336",
+      "date": "2025-08-06T11:56:51.772641",
+      "topic": "MCP Fundamental Primitives",
+      "score": 0.0,
+      "total_questions": 1,
+      "correct_answers": 0,
+      "accuracy": 0.0
+    },
+    {
+      "session_id": "session_20250806_115336",
+      "date": "2025-08-06T11:56:51.773860",
+      "topic": "Augmentation Retrieval",
+      "score": 100.0,
+      "total_questions": 2,
+      "correct_answers": 2,
+      "accuracy": 100.0
+    },
+    {
+      "session_id": "session_20250806_115336",
+      "date": "2025-08-06T11:56:51.775837",
+      "topic": "Agentic Payments & Economy",
+      "score": 100.0,
+      "total_questions": 1,
+      "correct_answers": 1,
+      "accuracy": 100.0
+    }
+  ],
+  "topic_performance": {
+    "LLM Augmentation": {
+      "total_tests": 1,
+      "total_score": 50.0,
+      "best_score": 50.0,
+      "recent_scores": [
+        50.0
+      ],
+      "improvement_trend": 0
+    },
+    "HTTP Fundamentals": {
+      "total_tests": 1,
+      "total_score": 50.0,
+      "best_score": 50.0,
+      "recent_scores": [
+        50.0
+      ],
+      "improvement_trend": 0
+    },
+    "Graphiti": {
+      "total_tests": 1,
+      "total_score": 0.0,
+      "best_score": 0,
+      "recent_scores": [
+        0.0
+      ],
+      "improvement_trend": 0
+    },
+    "Agentic Memory & Knowledge Graphs": {
+      "total_tests": 1,
+      "total_score": 0.0,
+      "best_score": 0,
+      "recent_scores": [
+        0.0
+      ],
+      "improvement_trend": 0
+    },
+    "Workflows vs Agents": {
+      "total_tests": 1,
+      "total_score": 66.66666666666666,
+      "best_score": 66.66666666666666,
+      "recent_scores": [
+        66.66666666666666
+      ],
+      "improvement_trend": 0
+    },
+    "MCP OpenAI Integration": {
+      "total_tests": 1,
+      "total_score": 66.66666666666666,
+      "best_score": 66.66666666666666,
+      "recent_scores": [
+        66.66666666666666
+      ],
+      "improvement_trend": 0
+    },
+    "Design Patterns": {
+      "total_tests": 1,
+      "total_score": 100.0,
+      "best_score": 100.0,
+      "recent_scores": [
+        100.0
+      ],
+      "improvement_trend": 0
+    },
+    "JSON-RPC 2.0": {
+      "total_tests": 1,
+      "total_score": 0.0,
+      "best_score": 0,
+      "recent_scores": [
+        0.0
+      ],
+      "improvement_trend": 0
+    },
+    "REST Architecture": {
+      "total_tests": 1,
+      "total_score": 100.0,
+      "best_score": 100.0,
+      "recent_scores": [
+        100.0
+      ],
+      "improvement_trend": 0
+    },
+    "Advanced MCP Topics": {
+      "total_tests": 1,
+      "total_score": 0.0,
+      "best_score": 0,
+      "recent_scores": [
+        0.0
+      ],
+      "improvement_trend": 0
+    },
+    "MCP Fundamental Primitives": {
+      "total_tests": 1,
+      "total_score": 0.0,
+      "best_score": 0,
+      "recent_scores": [
+        0.0
+      ],
+      "improvement_trend": 0
+    },
+    "Augmentation Retrieval": {
+      "total_tests": 1,
+      "total_score": 100.0,
+      "best_score": 100.0,
+      "recent_scores": [
+        100.0
+      ],
+      "improvement_trend": 0
+    },
+    "Agentic Payments & Economy": {
+      "total_tests": 1,
+      "total_score": 100.0,
+      "best_score": 100.0,
+      "recent_scores": [
+        100.0
+      ],
+      "improvement_trend": 0
+    }
+  },
+  "study_streak": 1,
+  "last_study_date": "2025-08-06"
+}

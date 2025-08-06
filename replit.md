@@ -9,15 +9,16 @@ Preferred communication style: Simple, everyday language.
 # System Architecture
 
 ## Frontend Architecture
-The application uses Streamlit as the primary web framework, providing a multi-page interface with sidebar navigation. The main entry point (`app.py`) orchestrates the entire application flow and manages session state across different study modes. The interface is organized into distinct study modes: Dashboard, Flashcards, Mock Tests, Analytics, and Summary Sheets.
+The application uses Streamlit as the primary web framework, providing a multi-page interface with sidebar navigation. The main entry point (`app.py`) orchestrates the entire application flow and manages session state across different study modes. The interface is organized into distinct study modes: Dashboard, Flashcards, Mock Tests, Analytics, Summary Sheets, Learning Resources, and comprehensive Documentation with framework selection capabilities.
 
 ## Component-Based Design
 The system follows a modular component architecture with separate modules for different functionalities:
 
 - **Flashcard System** (`components/flashcards.py`): Implements spaced repetition learning with multiple study modes including random review, full deck study, and custom selection
-- **Mock Test System** (`components/mock_test.py`): Provides comprehensive testing capabilities with full mock exams, topic-specific tests, and quick practice sessions
+- **Mock Test System** (`components/mock_test.py`): Provides comprehensive testing capabilities with full mock exams, topic-specific tests, difficulty-based tests, framework-based tests, and quick practice sessions
 - **Analytics Dashboard** (`components/analytics.py`): Tracks and visualizes learning progress with performance metrics and study streaks
-- **Test Generator** (`utils/test_generator.py`): Handles dynamic test creation with customizable question distribution across topics
+- **Test Generator** (`utils/test_generator.py`): Handles dynamic test creation with customizable question distribution across topics, frameworks, and difficulty levels
+- **Documentation System** (`components/documentation.py`): Comprehensive knowledge base covering Building Effective Agents, Model Context Protocol, and OpenAI Agents SDK with framework and difficulty filtering
 
 ## Data Management
 The application uses a file-based data storage approach with JSON for persistence:

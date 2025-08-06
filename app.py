@@ -48,8 +48,8 @@ def main():
     
     page = st.sidebar.selectbox(
         "Choose your study mode:",
-        ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets", "🔗 Learning Resources"],
-        index=["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets", "🔗 Learning Resources"].index(default_page) if default_page in ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets", "🔗 Learning Resources"] else 0
+        ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets", "🔗 Learning Resources", "📖 Documentation"],
+        index=["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets", "🔗 Learning Resources", "📖 Documentation"].index(default_page) if default_page in ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets", "🔗 Learning Resources", "📖 Documentation"] else 0
     )
     
     # Display current session stats in sidebar
@@ -75,6 +75,9 @@ def main():
         show_summary_sheets()
     elif page == "🔗 Learning Resources":
         show_learning_resources()
+    elif page == "📖 Documentation":
+        from components.documentation import show_comprehensive_docs
+        show_comprehensive_docs()
 
 def show_dashboard():
     st.header("Welcome to Your Agentic AI Study Hub")
@@ -231,6 +234,26 @@ def show_learning_resources():
         for title, url in mcp_resources:
             st.markdown(f"- **{title}**: [View Resource]({url})")
     
+    # OpenAI Agents SDK Resources
+    st.subheader("🤖 OpenAI Agents SDK")
+    st.markdown("**Production-Ready Agent Framework**: Complete toolkit for building agentic AI applications")
+    
+    with st.expander("📖 Study Materials - OpenAI Agents SDK"):
+        openai_resources = [
+            ("OpenAI Agents Python Documentation", "https://openai.github.io/openai-agents-python"),
+            ("OpenAI Agents GitHub Repository", "https://github.com/openai/openai-agents-python"),
+            ("Agents SDK Installation Guide", "https://openai.github.io/openai-agents-python/#installation"),
+            ("Hello World Example", "https://openai.github.io/openai-agents-python/#hello-world-example"),
+            ("Function Tools Documentation", "https://openai.github.io/openai-agents-python/tools/"),
+            ("Multi-Agent Handoffs Guide", "https://openai.github.io/openai-agents-python/handoffs/"),
+            ("Guardrails and Validation", "https://openai.github.io/openai-agents-python/guardrails/"),
+            ("Session Management", "https://openai.github.io/openai-agents-python/sessions/"),
+            ("Tracing and Monitoring", "https://openai.github.io/openai-agents-python/tracing/")
+        ]
+        
+        for title, url in openai_resources:
+            st.markdown(f"- **{title}**: [View Resource]({url})")
+    
     # Study Plan
     st.subheader("📋 Recommended Study Plan")
     
@@ -239,13 +262,16 @@ def show_learning_resources():
     with col1:
         st.markdown("### For Beginners 🧑‍💻")
         beginner_steps = [
-            "Start with **Workflows and Agents** to understand core concepts",
-            "Study **LLM Augmentation** (Retrieval, Tools, Memory)",
-            "Learn **Design Patterns** with code examples",
-            "Explore **Knowledge Graphs & Neo4j** basics",
-            "Practice with **Graphiti** for temporal knowledge",
+            "Start with **Building Effective Agents** core concepts",
+            "Learn **OpenAI Agents SDK** fundamentals and installation",
+            "Study **Model Context Protocol (MCP)** basics",
+            "Practice **Agent Design Patterns** with examples",
+            "Explore **LLM Augmentation** (Retrieval, Tools, Memory)",
+            "Implement **Multi-Agent Systems** and handoffs",
+            "Master **Knowledge Graphs & Neo4j** integration",
             "Apply **RAG and Retrieval** techniques",
-            "Understand **Agentic Payments** and real-world integration"
+            "Understand **Agentic Payments** and economy integration",
+            "Build **Production-Ready** agent applications"
         ]
         
         for i, step in enumerate(beginner_steps, 1):
@@ -253,6 +279,7 @@ def show_learning_resources():
     
     with col2:
         st.markdown("### Difficulty Progression 📈")
+        from data.study_data import get_difficulty_levels
         difficulty_info = get_difficulty_levels()
         
         for level, description in difficulty_info.items():

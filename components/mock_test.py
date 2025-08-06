@@ -41,7 +41,7 @@ def _show_test_setup(test_gen, progress_tracker):
     
     test_type = st.selectbox(
         "Select test format:",
-        ["🎓 Full Mock Test (120 questions)", "📚 Topic-Specific Test", "⚡ Quick Practice (20 questions)", "🎯 Difficulty-Based Test", "🔧 Custom Test"]
+        ["🎓 Full Mock Test (120 questions)", "📚 Topic-Specific Test", "⚡ Quick Practice (20 questions)", "🎯 Difficulty-Based Test", "🚀 Framework-Based Test", "🔧 Custom Test"]
     )
     
     if test_type == "🎓 Full Mock Test (120 questions)":
@@ -142,6 +142,46 @@ def _show_test_setup(test_gen, progress_tracker):
                 _start_test(questions, time_minutes, f"{selected_difficulty} Level Test", progress_tracker)
             else:
                 st.error(f"No questions available for {selected_difficulty} difficulty level.")
+    
+    elif test_type == "🚀 Framework-Based Test":
+        st.info("Test yourself on specific frameworks with customizable difficulty")
+        
+        available_frameworks = test_gen.get_available_frameworks()
+        selected_framework = st.selectbox("Choose framework:", available_frameworks)
+        
+        # Show framework description
+        framework_descriptions = {
+            "Building Effective Agents": "Test your knowledge of agent architecture, design patterns, memory systems, and tool integration",
+            "Model Context Protocol (MCP)": "Assess your understanding of MCP fundamentals, transport layers, and protocol implementation",
+            "OpenAI Agents SDK": "Evaluate your skills with OpenAI's production-ready agent framework"
+        }
+        
+        if selected_framework in framework_descriptions:
+            st.write(f"**{selected_framework}**: {framework_descriptions[selected_framework]}")
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            available_difficulties = test_gen.get_available_difficulties()
+            selected_difficulty = st.selectbox("Choose difficulty level:", ["All Levels"] + available_difficulties)
+        
+        with col2:
+            num_questions = st.slider("Number of questions:", 10, 100, 50)
+        
+        time_limit = st.selectbox("Time limit:", ["⏰ No limit", f"🚀 {num_questions} minutes", f"⚡ {num_questions//2} minutes"])
+        
+        if st.button(f"🚀 Start {selected_framework} Test", type="primary", use_container_width=True):
+            time_minutes = None
+            if f"{num_questions} minutes" in time_limit:
+                time_minutes = num_questions
+            elif f"{num_questions//2} minutes" in time_limit:
+                time_minutes = num_questions // 2
+            
+            questions = test_gen.generate_framework_test(selected_framework, selected_difficulty, num_questions)
+            if questions:
+                test_name = f"{selected_framework} - {selected_difficulty}" if selected_difficulty != "All Levels" else selected_framework
+                _start_test(questions, time_minutes, test_name, progress_tracker)
+            else:
+                st.error(f"No questions available for {selected_framework} with {selected_difficulty} difficulty.")
     
     else:  # Custom Test
         st.info("Create a custom test with your preferred topic distribution")
