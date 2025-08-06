@@ -41,7 +41,7 @@ def _show_test_setup(test_gen, progress_tracker):
     
     test_type = st.selectbox(
         "Select test format:",
-        ["🎓 Full Mock Test (120 questions)", "📚 Topic-Specific Test", "⚡ Quick Practice (20 questions)", "🔧 Custom Test"]
+        ["🎓 Full Mock Test (120 questions)", "📚 Topic-Specific Test", "⚡ Quick Practice (20 questions)", "🎯 Difficulty-Based Test", "🔧 Custom Test"]
     )
     
     if test_type == "🎓 Full Mock Test (120 questions)":
@@ -115,6 +115,33 @@ def _show_test_setup(test_gen, progress_tracker):
             
             questions = test_gen.generate_mock_test(20)
             _start_test(questions, time_minutes, "Quick Practice", progress_tracker)
+    
+    elif test_type == "🎯 Difficulty-Based Test":
+        st.info("Test yourself at specific difficulty levels")
+        
+        available_difficulties = test_gen.get_available_difficulties()
+        selected_difficulty = st.selectbox("Choose difficulty level:", available_difficulties)
+        
+        # Show difficulty description
+        difficulty_descriptions = test_gen.difficulty_levels
+        if selected_difficulty in difficulty_descriptions:
+            st.write(f"**{selected_difficulty}**: {difficulty_descriptions[selected_difficulty]}")
+        
+        num_questions = st.slider("Number of questions:", 10, 100, 50)
+        time_limit = st.selectbox("Time limit:", ["⏰ No limit", f"🚀 {num_questions} minutes", f"⚡ {num_questions//2} minutes"])
+        
+        if st.button(f"🚀 Start {selected_difficulty} Level Test", type="primary", use_container_width=True):
+            time_minutes = None
+            if f"{num_questions} minutes" in time_limit:
+                time_minutes = num_questions
+            elif f"{num_questions//2} minutes" in time_limit:
+                time_minutes = num_questions // 2
+            
+            questions = test_gen.generate_difficulty_test(selected_difficulty, num_questions)
+            if questions:
+                _start_test(questions, time_minutes, f"{selected_difficulty} Level Test", progress_tracker)
+            else:
+                st.error(f"No questions available for {selected_difficulty} difficulty level.")
     
     else:  # Custom Test
         st.info("Create a custom test with your preferred topic distribution")
@@ -227,7 +254,22 @@ def _show_active_test(test_gen, progress_tracker):
         
         st.markdown("---")
         st.markdown(f"### Question {current_q + 1}")
-        st.markdown(f"**Topic:** {question['topic']}")
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            st.markdown(f"**Topic:** {question['topic']}")
+        with col2:
+            difficulty = question.get('difficulty', 'Normal')
+            if difficulty == "Normal":
+                st.markdown("🟢 **Normal**")
+            elif difficulty == "Intermediate":
+                st.markdown("🟡 **Intermediate**")
+            elif difficulty == "Advanced":
+                st.markdown("🟠 **Advanced**")
+            elif difficulty == "PhD":
+                st.markdown("🔴 **PhD**")
+            else:  # God Level
+                st.markdown("🟣 **God Level**")
+        
         st.markdown(f"{question['question']}")
         
         # Answer options

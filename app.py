@@ -48,8 +48,8 @@ def main():
     
     page = st.sidebar.selectbox(
         "Choose your study mode:",
-        ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets"],
-        index=["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets"].index(default_page) if default_page in ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets"] else 0
+        ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets", "🔗 Learning Resources"],
+        index=["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets", "🔗 Learning Resources"].index(default_page) if default_page in ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets", "🔗 Learning Resources"] else 0
     )
     
     # Display current session stats in sidebar
@@ -73,6 +73,8 @@ def main():
         analytics_dashboard()
     elif page == "📋 Summary Sheets":
         show_summary_sheets()
+    elif page == "🔗 Learning Resources":
+        show_learning_resources()
 
 def show_dashboard():
     st.header("Welcome to Your Agentic AI Study Hub")
@@ -186,6 +188,107 @@ def show_summary_sheets():
             "Definition": st.column_config.TextColumn("Definition", width="large")
         }
     )
+
+def show_learning_resources():
+    st.header("🔗 Learning Resources")
+    st.markdown("Comprehensive study materials for Building Effective Agents and Model Context Protocol")
+    
+    # Building Effective Agents Resources
+    st.subheader("📚 Building Effective Agents")
+    st.markdown("**Level 2 Certification Exam**: 120 Questions, 3 Hours, Advanced Level")
+    
+    with st.expander("📖 Study Materials - Building Effective Agents"):
+        resources = [
+            ("Building Effective Agents Article", "https://www.anthropic.com/engineering/building-effective-agents"),
+            ("Workflows and Agents", "https://github.com/panaversity/learn-agentic-ai/tree/main/04_building_effective_agents/01_agents_workflows"),
+            ("Building Blocks - LLM Augmentation", "https://github.com/panaversity/learn-agentic-ai/tree/main/04_building_effective_agents/02_building_blocks"),
+            ("Design Patterns", "https://github.com/panaversity/learn-agentic-ai/tree/main/04_building_effective_agents/03_design_patterns"),
+            ("Agentic Memory, Neo4j AuraDB & Knowledge Graph", "https://github.com/panaversity/learn-agentic-ai/tree/main/04_building_effective_agents/04_augumentation_memory"),
+            ("Graphiti Learning Path", "https://github.com/panaversity/learn-agentic-ai/tree/main/04_building_effective_agents/04_augumentation_memory/06_graphiti_learning_path"),
+            ("Augmentation Retrieval", "https://github.com/panaversity/learn-agentic-ai/tree/main/04_building_effective_agents/05_augumention_retrival"),
+            ("Agentic Payments and Economy", "https://github.com/panaversity/learn-agentic-ai/tree/main/04_building_effective_agents/06_payments_economy")
+        ]
+        
+        for title, url in resources:
+            st.markdown(f"- **{title}**: [View Resource]({url})")
+    
+    # Model Context Protocol Resources
+    st.subheader("🔧 Model Context Protocol (MCP)")
+    st.markdown("**Level 2 Certification Exam**: 100 Questions, 2 Hours, Advanced Level")
+    
+    with st.expander("📖 Study Materials - Model Context Protocol"):
+        mcp_resources = [
+            ("HTTP Theory", "https://github.com/panaversity/learn-agentic-ai/tree/main/03_ai_protocols/01_mcp/01_http_theory"),
+            ("REST Architecture", "https://github.com/panaversity/learn-agentic-ai/tree/main/03_ai_protocols/01_mcp/02_rest"),
+            ("JSON-RPC Protocol", "https://github.com/panaversity/learn-agentic-ai/tree/main/03_ai_protocols/01_mcp/03_json_rpc"),
+            ("Anthropic MCP Fundamentals Course", "https://anthropic.skilljar.com/introduction-to-model-context-protocol"),
+            ("MCP Fundamental Primitives", "https://github.com/panaversity/learn-agentic-ai/tree/main/03_ai_protocols/01_mcp/04_fundamental_%20primitives"),
+            ("Anthropic MCP Advanced Course", "https://anthropic.skilljar.com/model-context-protocol-advanced-topics"),
+            ("MCP Capabilities and Transport", "https://github.com/panaversity/learn-agentic-ai/tree/main/03_ai_protocols/01_mcp/05_capabilities_and_transport"),
+            ("MCP with OpenAI Agents SDK", "https://github.com/panaversity/learn-agentic-ai/tree/main/03_ai_protocols/01_mcp/06_openai_agents_sdk_integration")
+        ]
+        
+        for title, url in mcp_resources:
+            st.markdown(f"- **{title}**: [View Resource]({url})")
+    
+    # Study Plan
+    st.subheader("📋 Recommended Study Plan")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("### For Beginners 🧑‍💻")
+        beginner_steps = [
+            "Start with **Workflows and Agents** to understand core concepts",
+            "Study **LLM Augmentation** (Retrieval, Tools, Memory)",
+            "Learn **Design Patterns** with code examples",
+            "Explore **Knowledge Graphs & Neo4j** basics",
+            "Practice with **Graphiti** for temporal knowledge",
+            "Apply **RAG and Retrieval** techniques",
+            "Understand **Agentic Payments** and real-world integration"
+        ]
+        
+        for i, step in enumerate(beginner_steps, 1):
+            st.write(f"{i}. {step}")
+    
+    with col2:
+        st.markdown("### Difficulty Progression 📈")
+        difficulty_info = get_difficulty_levels()
+        
+        for level, description in difficulty_info.items():
+            if level == "Normal":
+                icon = "🟢"
+            elif level == "Intermediate":
+                icon = "🟡"
+            elif level == "Advanced":
+                icon = "🟠"
+            elif level == "PhD":
+                icon = "🔴"
+            else:  # God Level
+                icon = "🟣"
+            
+            st.write(f"{icon} **{level}**: {description}")
+    
+    # Quick Links
+    st.markdown("---")
+    st.subheader("🚀 Quick Actions")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        if st.button("📝 Take MCP Quiz", use_container_width=True):
+            st.session_state.quick_nav = "📝 Mock Tests"
+            st.rerun()
+    
+    with col2:
+        if st.button("🔄 Study Flashcards", use_container_width=True):
+            st.session_state.quick_nav = "🔄 Flashcards"
+            st.rerun()
+    
+    with col3:
+        if st.button("📊 View Progress", use_container_width=True):
+            st.session_state.quick_nav = "📊 Analytics"
+            st.rerun()
 
 if __name__ == "__main__":
     main()

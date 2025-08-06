@@ -3,12 +3,13 @@ Test generation utilities for creating mock tests
 """
 import random
 from typing import Dict, List, Any, Optional
-from data.study_data import get_topics, get_questions_by_topic
+from data.study_data import get_topics, get_questions_by_topic, get_difficulty_levels
 
 class TestGenerator:
     def __init__(self):
         self.topics = get_topics()
         self.questions_pool = get_questions_by_topic()
+        self.difficulty_levels = get_difficulty_levels()
     
     def generate_mock_test(self, total_questions: int = 120, custom_distribution: Optional[Dict[str, int]] = None) -> List[Dict[str, Any]]:
         """
@@ -102,3 +103,48 @@ class TestGenerator:
     def get_topic_question_count(self, topic: str) -> int:
         """Get number of available questions for a topic"""
         return len(self.questions_pool.get(topic, []))
+    
+    def filter_questions_by_difficulty(self, questions: List[Dict[str, Any]], difficulty: str) -> List[Dict[str, Any]]:
+        """Filter questions by difficulty level"""
+        if difficulty == "All":
+            return questions
+        
+        filtered = [q for q in questions if q.get('difficulty', 'Normal') == difficulty]
+        
+        # If no questions found for specific difficulty, fall back to all questions
+        if not filtered:
+            return questions
+        
+        return filtered
+    
+    def generate_difficulty_test(self, difficulty: str, total_questions: int = 50) -> List[Dict[str, Any]]:
+        """Generate a test focused on a specific difficulty level"""
+        all_questions = []
+        
+        # Collect all questions from all topics
+        for topic, questions in self.questions_pool.items():
+            filtered_questions = self.filter_questions_by_difficulty(questions, difficulty)
+            for question in filtered_questions:
+                question_copy = question.copy()
+                question_copy['topic'] = topic
+                all_questions.append(question_copy)
+        
+        if not all_questions:
+            return []
+        
+        # Select random questions up to the total requested
+        if total_questions >= len(all_questions):
+            selected = all_questions.copy()
+        else:
+            selected = random.sample(all_questions, total_questions)
+        
+        # Add question numbers and shuffle
+        random.shuffle(selected)
+        for i, question in enumerate(selected, 1):
+            question['question_number'] = i
+        
+        return selected
+    
+    def get_available_difficulties(self) -> List[str]:
+        """Get list of available difficulty levels"""
+        return list(self.difficulty_levels.keys())

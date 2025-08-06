@@ -1,6 +1,6 @@
 # Overview
 
-The Agentic AI Study Hub is a comprehensive learning platform built with Streamlit that helps users study artificial intelligence concepts, particularly focused on agentic AI systems. The application provides an interactive study experience through flashcards, mock tests, analytics tracking, and summary sheets. It's designed to support different learning modes including spaced repetition, random review, and structured testing with progress tracking capabilities.
+The Agentic AI Study Hub is a comprehensive learning platform built with Streamlit that helps users study artificial intelligence concepts, focusing on both Building Effective Agents and Model Context Protocol (MCP). The application provides an interactive study experience through flashcards, mock tests with multiple difficulty levels, analytics tracking, summary sheets, and learning resources. It supports different learning modes including spaced repetition, random review, and structured testing with progress tracking capabilities. The platform now includes 5 difficulty levels (Normal, Intermediate, Advanced, PhD, God Level) and comprehensive MCP certification content.
 
 # User Preferences
 
