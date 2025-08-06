@@ -2,7 +2,7 @@
 Test generation utilities for creating mock tests
 """
 import random
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from data.study_data import get_topics, get_questions_by_topic
 
 class TestGenerator:
@@ -10,7 +10,7 @@ class TestGenerator:
         self.topics = get_topics()
         self.questions_pool = get_questions_by_topic()
     
-    def generate_mock_test(self, total_questions: int = 120, custom_distribution: Dict[str, int] = None) -> List[Dict[str, Any]]:
+    def generate_mock_test(self, total_questions: int = 120, custom_distribution: Optional[Dict[str, int]] = None) -> List[Dict[str, Any]]:
         """
         Generate a mock test with specified number of questions
         

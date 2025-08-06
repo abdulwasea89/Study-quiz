@@ -270,7 +270,11 @@ def _show_active_test(test_gen, progress_tracker):
                         button_type = None
                         label = f"{q_idx + 1}"
                     
-                    if st.button(label, key=f"nav_{q_idx}", type=button_type, use_container_width=True):
+                    button_kwargs = {"key": f"nav_{q_idx}", "use_container_width": True}
+                    if button_type:
+                        button_kwargs["type"] = button_type
+                    
+                    if st.button(label, **button_kwargs):
                         session['current_question'] = q_idx
                         st.rerun()
     

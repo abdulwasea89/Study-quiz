@@ -38,9 +38,18 @@ def main():
     
     # Sidebar navigation
     st.sidebar.title("Navigation")
+    
+    # Handle quick navigation from dashboard
+    if 'quick_nav' in st.session_state:
+        default_page = st.session_state.quick_nav
+        del st.session_state.quick_nav
+    else:
+        default_page = "📚 Dashboard"
+    
     page = st.sidebar.selectbox(
         "Choose your study mode:",
-        ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets"]
+        ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets"],
+        index=["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets"].index(default_page) if default_page in ["📚 Dashboard", "🔄 Flashcards", "📝 Mock Tests", "📊 Analytics", "📋 Summary Sheets"] else 0
     )
     
     # Display current session stats in sidebar
@@ -100,18 +109,18 @@ def show_dashboard():
     
     with col1:
         if st.button("🔄 Start Flashcard Review", use_container_width=True):
-            st.switch_page("app.py")
-            st.session_state.page = "🔄 Flashcards"
+            st.session_state.quick_nav = "🔄 Flashcards"
+            st.rerun()
     
     with col2:
         if st.button("📝 Take Practice Test", use_container_width=True):
-            st.switch_page("app.py")
-            st.session_state.page = "📝 Mock Tests"
+            st.session_state.quick_nav = "📝 Mock Tests"
+            st.rerun()
     
     with col3:
         if st.button("📊 View Progress", use_container_width=True):
-            st.switch_page("app.py")
-            st.session_state.page = "📊 Analytics"
+            st.session_state.quick_nav = "📊 Analytics"
+            st.rerun()
     
     # Recent activity
     st.markdown("---")
@@ -157,7 +166,8 @@ def show_summary_sheets():
     st.subheader("📚 Flashcard Reference")
     
     flashcards = get_flashcards()
-    df = pd.DataFrame(list(flashcards.items()), columns=["Term", "Definition"])
+    flashcard_items = list(flashcards.items())
+    df = pd.DataFrame(flashcard_items, columns=["Term", "Definition"])
     
     # Add search functionality
     search_term = st.text_input("🔍 Search flashcards:", placeholder="Enter term or keyword...")

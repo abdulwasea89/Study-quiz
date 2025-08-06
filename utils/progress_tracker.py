@@ -70,7 +70,7 @@ class ProgressTracker:
         self._update_study_streak()
         self._save_data()
     
-    def record_flashcard_study(self, session_id: str, term: str, correct: bool, response_time: float = None):
+    def record_flashcard_study(self, session_id: str, term: str, correct: bool, response_time: Optional[float] = None):
         """Record flashcard study activity"""
         # Update session
         for session in self.data["sessions"]:

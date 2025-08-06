@@ -278,7 +278,7 @@ def analytics_dashboard():
         st.plotly_chart(fig_cards, use_container_width=True)
         
         # Most challenging cards
-        challenging_cards = df_cards[df_cards['Accuracy'] < 70].sort_values('Accuracy')
+        challenging_cards = df_cards[df_cards['Accuracy'] < 70].sort_values('Accuracy', ascending=True)
         
         if not challenging_cards.empty:
             st.subheader("🎯 Cards That Need More Practice")
@@ -311,9 +311,11 @@ def analytics_dashboard():
                 'flashcard_stats': flashcard_stats
             }
             
+            import json
+            progress_json = json.dumps(progress_data, indent=2, default=str)
             st.download_button(
                 label="📥 Download Progress Report (JSON)",
-                data=pd.DataFrame([progress_data]).to_json(orient='records', indent=2),
+                data=progress_json,
                 file_name=f"agentic_ai_progress_{datetime.now().strftime('%Y%m%d')}.json",
                 mime="application/json"
             )
