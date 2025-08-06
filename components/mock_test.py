@@ -41,7 +41,7 @@ def _show_test_setup(test_gen, progress_tracker):
     
     test_type = st.selectbox(
         "Select test format:",
-        ["🎓 Full Mock Test (120 questions)", "📚 Topic-Specific Test", "⚡ Quick Practice (20 questions)", "🎯 Difficulty-Based Test", "🚀 Framework-Based Test", "🔧 Custom Test"]
+        ["🎓 Full Mock Test (120 questions)", "📚 Topic-Specific Test", "⚡ Quick Practice (20 questions)", "🎯 Difficulty-Based Test", "🚀 Framework-Based Test", "🧠 PhD-Level Test", "🏆 Certification Test", "🔧 Custom Test"]
     )
     
     if test_type == "🎓 Full Mock Test (120 questions)":
@@ -182,6 +182,115 @@ def _show_test_setup(test_gen, progress_tracker):
                 _start_test(questions, time_minutes, test_name, progress_tracker)
             else:
                 st.error(f"No questions available for {selected_framework} with {selected_difficulty} difficulty.")
+    
+    elif test_type == "🧠 PhD-Level Test":
+        st.info("Ultra-detailed questions with comprehensive theoretical depth - PhD level complexity")
+        st.warning("⚠️ These questions require deep understanding of theoretical concepts, advanced architectures, and research-level knowledge")
+        
+        # Framework selection for PhD test
+        framework_options = ["All Frameworks", "Building Effective Agents", "Model Context Protocol (MCP)", "OpenAI Agents SDK"]
+        selected_framework = st.selectbox("Choose framework focus:", framework_options)
+        
+        # Difficulty selection
+        phd_difficulties = ["PhD", "God Level"]
+        selected_difficulty = st.selectbox("Choose difficulty level:", phd_difficulties)
+        
+        num_questions = st.slider("Number of questions:", 5, 50, 25)
+        time_limit = st.selectbox("Time limit:", [
+            "⏰ No limit",
+            f"🔥 {num_questions * 3} minutes (3 min/question)",
+            f"🚀 {num_questions * 2} minutes (2 min/question)"
+        ])
+        
+        # Show sample PhD question complexity
+        with st.expander("📖 See PhD Question Complexity Example"):
+            st.markdown("""
+            **Sample PhD-Level Question:**
+            
+            "In designing a temporal knowledge graph system like Graphiti for long-term episodic memory in agents, 
+            how would you implement efficient temporal reasoning that handles both absolute timestamps and relative 
+            temporal relationships, while maintaining causal consistency and enabling counterfactual reasoning?"
+            
+            **PhD questions test:**
+            - Advanced system architecture design
+            - Theoretical computer science concepts
+            - Research-level implementation details
+            - Integration of multiple complex domains
+            """)
+        
+        if st.button(f"🧠 Start PhD-Level Test ({selected_difficulty})", type="primary", use_container_width=True):
+            time_minutes = None
+            if f"{num_questions * 3} minutes" in time_limit:
+                time_minutes = num_questions * 3
+            elif f"{num_questions * 2} minutes" in time_limit:
+                time_minutes = num_questions * 2
+            
+            # Generate PhD-level test
+            questions = test_gen.generate_phd_test(
+                framework=selected_framework.replace(" Frameworks", ""),
+                difficulty=selected_difficulty,
+                num_questions=num_questions
+            )
+            
+            if questions:
+                test_name = f"PhD-Level {selected_framework} ({selected_difficulty})"
+                _start_test(questions, time_minutes, test_name, progress_tracker)
+            else:
+                st.error("PhD-level content not available. Please check that advanced content is loaded.")
+    
+    elif test_type == "🏆 Certification Test":
+        st.info("Comprehensive certification-style tests with progressive difficulty distribution")
+        st.success("✨ Includes all difficulty levels: Normal (20%) → Intermediate (25%) → Advanced (25%) → PhD (20%) → God Level (10%)")
+        
+        # Framework selection
+        cert_frameworks = ["Building Effective Agents", "Model Context Protocol (MCP)", "OpenAI Agents SDK"]
+        selected_framework = st.selectbox("Choose certification framework:", cert_frameworks)
+        
+        # Test length options
+        test_length_options = {
+            "🎯 Standard (60 questions - 90 min)": 60,
+            "🔥 Professional (120 questions - 180 min)": 120,  
+            "🏆 Expert (180 questions - 270 min)": 180
+        }
+        
+        selected_length = st.selectbox("Choose certification level:", list(test_length_options.keys()))
+        num_questions = test_length_options[selected_length]
+        
+        # Show question distribution
+        with st.expander("📊 Question Distribution"):
+            st.markdown(f"""
+            **Total Questions: {num_questions}**
+            - Normal: {int(num_questions * 0.20)} questions (20%) - Foundational concepts
+            - Intermediate: {int(num_questions * 0.25)} questions (25%) - Applied knowledge  
+            - Advanced: {int(num_questions * 0.25)} questions (25%) - Complex scenarios
+            - PhD: {int(num_questions * 0.20)} questions (20%) - Theoretical depth
+            - God Level: {int(num_questions * 0.10)} questions (10%) - Research-level mastery
+            """)
+        
+        # Time limit based on question count
+        default_time = int(num_questions * 1.5)  # 1.5 minutes per question
+        time_options = [
+            "⏰ No limit",
+            f"🎯 Recommended ({default_time} min - 1.5 min/question)",
+            f"🚀 Fast track ({num_questions} min - 1 min/question)"
+        ]
+        time_limit = st.selectbox("Time limit:", time_options)
+        
+        if st.button(f"🏆 Start {selected_framework} Certification", type="primary", use_container_width=True):
+            time_minutes = None
+            if f"Recommended ({default_time} min" in time_limit:
+                time_minutes = default_time
+            elif f"Fast track ({num_questions} min" in time_limit:
+                time_minutes = num_questions
+            
+            # Generate comprehensive certification test
+            questions = test_gen.generate_comprehensive_certification_test(selected_framework, num_questions)
+            
+            if questions:
+                test_name = f"{selected_framework} Certification ({num_questions}Q)"
+                _start_test(questions, time_minutes, test_name, progress_tracker)
+            else:
+                st.error("Could not generate certification test. Please ensure all content is properly loaded.")
     
     else:  # Custom Test
         st.info("Create a custom test with your preferred topic distribution")

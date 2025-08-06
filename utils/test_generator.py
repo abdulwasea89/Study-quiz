@@ -7,7 +7,9 @@ from data.study_data import get_topics, get_questions_by_topic, get_difficulty_l
 from data.enhanced_study_data import (
     get_progressive_openai_sdk_questions,
     get_enhanced_building_agents_questions,
-    get_enhanced_mcp_questions
+    get_enhanced_mcp_questions,
+    PHD_QUESTIONS_POOL,
+    HAS_PHD_CONTENT
 )
 
 class TestGenerator:
@@ -92,7 +94,7 @@ class TestGenerator:
         
         return distribution
     
-    def generate_framework_test(self, framework: str, difficulty: str = None, num_questions: int = 50) -> List[Dict[str, Any]]:
+    def generate_framework_test(self, framework: str, difficulty: Optional[str] = None, num_questions: int = 50) -> List[Dict[str, Any]]:
         """Generate test for specific framework and difficulty"""
         if framework not in self.frameworks:
             return []
@@ -124,6 +126,79 @@ class TestGenerator:
         for i, question in enumerate(test_questions, 1):
             question['question_number'] = i
         
+        return test_questions
+    
+    def generate_phd_test(self, framework: str = "All", difficulty: str = "PhD", num_questions: int = 50) -> List[Dict[str, Any]]:
+        """Generate PhD-level test with ultra-detailed questions"""
+        if not HAS_PHD_CONTENT:
+            return []
+            
+        phd_questions = []
+        
+        # Filter PhD questions by framework if specified
+        if framework != "All":
+            framework_map = {
+                "Building Effective Agents": "Building Effective Agents",
+                "Model Context Protocol (MCP)": "MCP", 
+                "OpenAI Agents SDK": "OpenAI Agents SDK"
+            }
+            target_framework = framework_map.get(framework)
+            if target_framework:
+                phd_questions = [q for q in PHD_QUESTIONS_POOL if q.get('framework') == target_framework]
+        else:
+            phd_questions = PHD_QUESTIONS_POOL.copy()
+        
+        # Filter by difficulty
+        if difficulty != "All Levels":
+            phd_questions = [q for q in phd_questions if q.get('difficulty') == difficulty]
+        
+        # Sample requested number of questions
+        if len(phd_questions) > num_questions:
+            phd_questions = random.sample(phd_questions, num_questions)
+        
+        # Add metadata and shuffle
+        for i, question in enumerate(phd_questions, 1):
+            question['question_number'] = i
+            if not question.get('framework'):
+                question['framework'] = framework if framework != "All" else "Multi-Framework"
+        
+        random.shuffle(phd_questions)
+        return phd_questions
+    
+    def generate_comprehensive_certification_test(self, framework: str, total_questions: int = 120) -> List[Dict[str, Any]]:
+        """Generate comprehensive certification-level test combining all difficulty levels"""
+        test_questions = []
+        
+        # Distribution: 20% Normal, 25% Intermediate, 25% Advanced, 20% PhD, 10% God Level
+        distribution = {
+            "Normal": int(total_questions * 0.20),
+            "Intermediate": int(total_questions * 0.25), 
+            "Advanced": int(total_questions * 0.25),
+            "PhD": int(total_questions * 0.20),
+            "God Level": int(total_questions * 0.10)
+        }
+        
+        # Adjust for rounding
+        actual_total = sum(distribution.values())
+        if actual_total < total_questions:
+            distribution["Advanced"] += total_questions - actual_total
+        
+        for difficulty, num_q in distribution.items():
+            if difficulty in ["PhD", "God Level"] and HAS_PHD_CONTENT:
+                # Use PhD-level questions
+                phd_q = self.generate_phd_test(framework, difficulty, num_q)
+                test_questions.extend(phd_q)
+            else:
+                # Use regular framework test
+                framework_q = self.generate_framework_test(framework, difficulty, num_q)
+                test_questions.extend(framework_q[:num_q])
+        
+        random.shuffle(test_questions)
+        
+        # Renumber questions
+        for i, question in enumerate(test_questions, 1):
+            question['question_number'] = i
+            
         return test_questions
     
     def get_available_frameworks(self) -> List[str]:

@@ -539,3 +539,49 @@ def get_comprehensive_framework_concepts():
         
         "Dynamic Resource Discovery": "Advanced MCP features for dynamic service discovery, capability negotiation, and adaptive resource binding in distributed systems."
     }
+
+# Import PhD-level content  
+try:
+    from .phd_level_study_data import (
+        PHD_ALL_QUESTIONS, PHD_FLASHCARDS as PHD_CARDS,
+        PHD_TOPIC_DEFINITIONS as PHD_TOPICS,
+        get_phd_questions_by_difficulty, get_phd_questions_by_framework,
+        get_phd_questions_by_topic
+    )
+    PHD_QUESTIONS_POOL = PHD_ALL_QUESTIONS
+    HAS_PHD_CONTENT = True
+except ImportError:
+    PHD_QUESTIONS_POOL = []
+    PHD_CARDS = []
+    PHD_TOPICS = {}
+    HAS_PHD_CONTENT = False
+
+# Create enhanced collections function
+def get_enhanced_flashcards():
+    """Get enhanced flashcards including PhD-level content if available"""
+    from .study_data import get_flashcards
+    
+    # Start with base flashcards
+    base_flashcards = get_flashcards()
+    enhanced_flashcards = list(base_flashcards.items())  # Convert dict to list of tuples
+    
+    # Add PhD content if available
+    if HAS_PHD_CONTENT:
+        for card in PHD_CARDS:
+            enhanced_flashcards.append((card.get('front', ''), card.get('back', '')))
+    
+    # Convert back to dict format
+    return dict(enhanced_flashcards)
+
+def get_enhanced_topic_definitions():
+    """Get enhanced topic definitions including PhD-level topics if available"""
+    # Start with base topic definitions from the function above
+    enhanced_definitions = get_all_topic_definitions()
+    
+    # Add PhD topic definitions if available
+    if HAS_PHD_CONTENT:
+        for topic, definition in PHD_TOPICS.items():
+            if topic not in enhanced_definitions:
+                enhanced_definitions[topic] = definition
+    
+    return enhanced_definitions
